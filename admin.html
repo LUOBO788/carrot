@@ -3,343 +3,255 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carrot - 管理后台</title>
+<title>Carrot 管理后台</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-:root {
-  --bg: #050507;
-  --card: #12151d;
-  --text: #e0e6ff;
-  --light-text: #a0b0d0;
-  --border: #252a3a;
-  --blue: #00d1ff;
-  --purple: #9d00ff;
-  --pink: #ff00d1;
-  --glow: 0 0 12px rgba(0,209,255,0.4);
+:root{
+  --bg:#050507;--card:#12151d;--text:#e0e6ff;--light-text:#aaa;
+  --border:#252a33;--blue:#00d1ff;--purple:#9d00ff;--pink:#ff00d1;
 }
-#particles {position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;}
-body {font-family:'Segoe UI',Roboto,'Microsoft YaHei',sans-serif;background:#050507;color:var(--text);line-height:1.8;min-height:100vh;padding-bottom:40px;overflow-x:hidden;}
-.gradient-text {font-weight:bold;background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 4s linear infinite;}
-@keyframes flow {0%{background-position:0% 50%;}100%{background-position:250% 50%;}}
-.nav {position:fixed;top:0;width:100%;background:rgba(10,12,18,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.05);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;z-index:999;}
-.logo {font-size:20px;font-weight:bold;}
-.logout-btn {padding:8px 16px;border-radius:10px;background:rgba(255,64,124,0.1);color:#ff407c;border:1px solid rgba(255,64,124,0.2);font-size:13px;cursor:pointer;display:none;}
-.container {max-width:500px;margin:90px auto 0;padding:20px;}
-.login-box {background:rgba(20,23,32,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:20px;padding:40px 30px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.2);}
-.login-box h2 {margin-bottom:30px;}
-.login-box input {width:100%;padding:16px;margin-bottom:16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:14px;color:var(--text);font-size:15px;outline:none;transition:0.3s;}
-.login-box input:focus {border-color:var(--blue);box-shadow:var(--glow);}
-.login-btn {width:100%;padding:16px;border-radius:14px;background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff;font-weight:bold;border:none;cursor:pointer;transition:0.3s;box-shadow:0 6px 18px rgba(0,209,255,0.2);}
-.login-btn:hover {transform:translateY(-3px);}
-.admin-section {display:none;}
-.section-title {margin:20px 0;text-align:center;}
-.card {background:rgba(20,23,32,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:18px;padding:24px;margin-bottom:20px;}
-.card h3 {margin-bottom:16px;font-size:16px;}
-.user-table {width:100%;border-collapse:collapse;}
-.user-table th,.user-table td {padding:12px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.05);font-size:14px;}
-.notice-input {width:100%;padding:16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:14px;color:var(--text);min-height:120px;margin-bottom:16px;outline:none;resize:none;}
-.save-btn {width:100%;padding:14px;border-radius:12px;background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff;font-weight:bold;border:none;cursor:pointer;transition:0.3s;}
-.save-btn:hover {transform:translateY(-2px);}
-input.apk-input {width:100%;padding:14px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;color:var(--text);margin-bottom:12px;outline:none;}
-.msg {padding:10px;border-radius:10px;margin:10px 0;text-align:center;display:none;font-size:14px;}
-.msg-success {background:rgba(0,255,136,0.08);color:#00ff88;border:1px solid rgba(0,255,136,0.1);}
-.msg-error {background:rgba(255,64,124,0.08);color:#ff407c;border:1px solid rgba(255,64,124,0.1);}
-.current-info {background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;margin-top:10px;font-size:13px;color:var(--light-text);}
-.agent-input {width:100%;padding:14px;margin-bottom:10px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;color:var(--text);}
-.card-input {width:100%;padding:14px;margin-bottom:10px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;color:var(--text);}
-
-.qr-upload {
-  background:rgba(255,255,255,0.05);
-  border:2px dashed #444;
-  border-radius:12px;
-  padding:20px;
-  text-align:center;
-  cursor:pointer;
-  margin-bottom:10px;
+body{background:#050507;color:var(--text);font-family:Segoe UI,Microsoft YaHei,sans-serif;}
+.nav{
+  position:fixed;top:0;left:0;width:100%;
+  background:#111;padding:16px;
+  display:flex;justify-content:space-between;align-items:center;
+  z-index:99;
 }
-.qr-upload:hover {border-color:var(--blue);}
-.qr-preview {
-  width:160px;
-  height:160px;
-  background:#111;
-  border-radius:12px;
-  margin:10px auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.logo{
+  background:linear-gradient(90deg,#00d1ff,#9d00ff,#ff00d1);
+  -webkit-background-clip:text;background-clip:text;color:transparent;
+  font-weight:bold;font-size:18px;
 }
-.qr-preview img {
-  max-width:100%;
-  max-height:100%;
-  border-radius:10px;
+.btn{
+  background:linear-gradient(90deg,var(--blue),var(--purple));
+  color:#fff;border:none;border-radius:12px;padding:10px 14px;
+  cursor:pointer;margin:4px;
 }
-.upload-input {display:none;}
+.btn-danger{background:rgba(255,64,124,.2);color:#ff407c;}
+.container{max-width:600px;margin:80px auto;padding:20px;}
+.card{
+  background:var(--card);border-radius:16px;padding:20px;
+  margin-bottom:16px;border:1px solid var(--border);
+}
+.card h3{margin-bottom:12px;color:var(--text);}
+input,textarea,select{
+  width:100%;background:rgba(255,255,255,.05);
+  border:1px solid var(--border);border-radius:12px;
+  padding:12px;margin:6px 0;color:#fff;outline:none;
+}
+.upload{
+  border:2px dashed #555;border-radius:12px;
+  padding:18px;text-align:center;cursor:pointer;margin:10px 0;
+}
+.order{
+  background:#151515;border-radius:12px;padding:14px;margin-bottom:10px;
+}
+.order img{max-width:140px;border-radius:8px;margin:8px 0;}
+.title{font-size:14px;color:#ccc;}
+#qrPrev{max-width:180px;border-radius:12px;margin:10px 0;display:none;}
+.agent-item{
+  padding:8px 0;cursor:pointer;color:#eee;
+}
 </style>
 </head>
 <body>
-<div id="particles"></div>
+
 <div class="nav">
-  <div class="logo gradient-text">🥕 Carrot 管理后台</div>
-  <button class="logout-btn" id="logoutBtn" onclick="adminLogout()">退出登录</button>
+  <div class="logo">Carrot 管理后台</div>
+  <button class="btn" onclick="logout()">退出登录</button>
 </div>
-<div class="container">
-  <div class="login-box" id="loginBox">
-    <h2 class="gradient-text">管理员登录</h2>
-    <input type="text" id="adminUser" placeholder="管理员账号">
-    <input type="password" id="adminPwd" placeholder="管理员密码">
-    <button class="login-btn" onclick="adminLogin()">立即登录</button>
+
+<div class="container" id="admin" style="display:none;">
+  <div class="card">
+    <h3>收款码设置</h3>
+    <div class="upload" onclick="document.getElementById('qr').click()">点击上传收款码</div>
+    <input type="file" id="qr" accept="image/*" style="display:none;">
+    <img id="qrPrev">
+    <button class="btn" onclick="saveQr()">保存收款码</button>
   </div>
 
-  <div class="admin-section" id="adminPanel">
-    <h2 class="gradient-text section-title">控制面板</h2>
+  <div class="card">
+    <h3>卡密管理</h3>
+    <select id="ctype">
+      <option value="周卡">周卡</option>
+      <option value="月卡">月卡</option>
+      <option value="季卡">季卡</option>
+      <option value="永久">永久</option>
+    </select>
+    <textarea id="cards" rows="4" placeholder="一行一个卡密"></textarea>
+    <button class="btn" onclick="addCards()">添加卡密</button>
+    <div id="cardCount" style="margin-top:8px;"></div>
+  </div>
 
-    <!-- 收款码 本地上传 -->
-    <div class="card">
-      <h3 class="gradient-text">收款码设置</h3>
-      <label class="qr-upload" id="qrUploadLabel">
-        <p>点击上传收款码图片</p>
-        <input type="file" id="qrFile" class="upload-input" accept="image/*">
-      </label>
-      <div class="qr-preview" id="qrPreview"></div>
-      <button class="save-btn" onclick="savePayQr()">保存收款码</button>
-    </div>
+  <div class="card">
+    <h3>代理管理</h3>
+    <input id="an" placeholder="代理名称">
+    <input id="aq" placeholder="QQ号">
+    <select id="al">
+      <option value="总代理">总代理</option>
+      <option value="代理">代理</option>
+    </select>
+    <button class="btn" onclick="addAgent()">添加代理</button>
+    <div id="agentList" style="margin-top:14px;"></div>
+  </div>
 
-    <!-- 卡密管理 -->
-    <div class="card">
-      <h3 class="gradient-text">卡密管理</h3>
-      <select class="card-input" id="cardType">
-        <option value="周卡">周卡</option>
-        <option value="月卡">月卡</option>
-        <option value="季卡">季卡</option>
-        <option value="永久">永久</option>
-      </select>
-      <textarea class="card-input" id="cardList" placeholder="每行一个卡密，批量添加" rows="4"></textarea>
-      <button class="save-btn" onclick="addCards()">添加卡密</button>
-      <div id="cardCount" style="margin-top:10px;font-size:14px;color:var(--light-text);"></div>
-    </div>
+  <div class="card">
+    <h3>待审核订单</h3>
+    <div id="orderList"></div>
+  </div>
+</div>
 
-    <!-- 代理管理 -->
-    <div class="card">
-      <h3 class="gradient-text">添加代理</h3>
-      <input class="agent-input" id="agentName" placeholder="代理名称">
-      <input class="agent-input" id="agentQQ" placeholder="代理QQ号">
-      <select class="agent-input" id="agentLevel">
-        <option value="总代理">总代理</option>
-        <option value="代理">代理</option>
-      </select>
-      <button class="save-btn" onclick="addAgent()">添加代理</button>
-      <div id="agentMsg" class="msg"></div>
-    </div>
-
-    <div class="card">
-      <h3 class="gradient-text">代理列表（点击删除）</h3>
-      <div id="agentAdminList" style="font-size:14px;color:var(--light-text);"></div>
-    </div>
-
-    <div class="card">
-      <h3 class="gradient-text">用户列表</h3>
-      <table class="user-table">
-        <thead><tr><th>用户名</th></tr></thead>
-        <tbody id="userList"></tbody>
-      </table>
-    </div>
-
-    <div class="card">
-      <h3 class="gradient-text">公告管理</h3>
-      <textarea class="notice-input" id="noticeText" placeholder="输入公告内容"></textarea>
-      <button class="save-btn" onclick="saveNotice()">保存公告</button>
-    </div>
-
-    <div class="card">
-      <h3 class="gradient-text">APK 下载设置</h3>
-      <input class="apk-input" type="text" id="apkUrl" placeholder="APK 下载链接">
-      <input class="apk-input" type="text" id="apkName" placeholder="版本名（如 v1.2.0）">
-      <button class="save-btn" onclick="saveApk()">保存并同步</button>
-      <div id="apkStatus" class="msg"></div>
-      <div id="currentApk" class="current-info"></div>
-    </div>
+<div class="container" id="login">
+  <div class="card">
+    <h3>管理员登录</h3>
+    <input id="user" placeholder="账号">
+    <input id="pwd" type="password" placeholder="密码">
+    <button class="btn" onclick="login()">登录</button>
   </div>
 </div>
 
 <script>
-function createParticles(){
-  const p=document.getElementById('particles');
-  for(let i=0;i<40;i++){
-    let d=document.createElement('div');
-    d.style.cssText=`position:absolute;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;background:#00d1ff;border-radius:50%;top:${Math.random()*100}%;left:${Math.random()*100}%;opacity:${Math.random()*0.5+0.2};box-shadow:0 0 4px #00d1ff;animation:f ${Math.random()*5+3}s linear infinite`;
-    p.appendChild(d);
-  }
-  let s=document.createElement('style');
-  s.innerHTML='@keyframes f{0%{transform:translate(0,0);}50%{transform:translate(6px,6px);}100%{transform:translate(0,0);}}';
-  document.head.appendChild(s);
-}
-
 const ADMIN_USER = "LUOBO";
 const ADMIN_PWD = "tianniWZ1030LJH";
 
-// 登录
-function adminLogin(){
-  const u=document.getElementById('adminUser').value.trim();
-  const p=document.getElementById('adminPwd').value.trim();
-  if(u===ADMIN_USER&&p===ADMIN_PWD){
-    localStorage.setItem('adminLogin','true');
-    showAdmin();
-  }else{alert("账号或密码错误");}
+function login(){
+  const u = document.getElementById('user').value;
+  const p = document.getElementById('pwd').value;
+  if(u === ADMIN_USER && p === ADMIN_PWD){
+    localStorage.setItem('admin','ok');
+    location.reload();
+  }else{
+    alert('账号或密码错误');
+  }
 }
 
-function showAdmin(){
-  document.getElementById('loginBox').style.display="none";
-  document.getElementById('adminPanel').style.display="block";
-  document.getElementById('logoutBtn').style.display="block";
-  loadUserList();
-  loadAgentsForAdmin();
-  loadCardCount();
-  loadPayQr();
-}
-
-function adminLogout(){
-  localStorage.removeItem('adminLogin');
+function logout(){
+  localStorage.removeItem('admin');
   location.reload();
 }
 
-// 用户列表
-function loadUserList(){
-  const list=JSON.parse(localStorage.getItem('carrotUsers')||'[]');
-  const b=document.getElementById('userList');
-  b.innerHTML='';
-  list.forEach(u=>{
-    let tr=document.createElement('tr');
-    tr.innerHTML=`<td>${u.username}</td>`;
-    b.appendChild(tr);
-  });
-}
-
-// 代理
-function addAgent(){
-  const name = document.getElementById('agentName').value.trim();
-  const qq = document.getElementById('agentQQ').value.trim();
-  const level = document.getElementById('agentLevel').value;
-  if(!name || !qq){
-    showMsg('agentMsg','请填写完整','error');
-    return;
-  }
-  const list = JSON.parse(localStorage.getItem('agentList')||'[]');
-  list.push({name, qq, level});
-  localStorage.setItem('agentList',JSON.stringify(list));
-  showMsg('agentMsg','添加成功','success');
-  document.getElementById('agentName').value='';
-  document.getElementById('agentQQ').value='';
-  loadAgentsForAdmin();
-}
-
-function deleteAgent(index){
-  if(!confirm('确定删除该代理？')) return;
-  const list = JSON.parse(localStorage.getItem('agentList')||'[]');
-  list.splice(index,1);
-  localStorage.setItem('agentList',JSON.stringify(list));
-  loadAgentsForAdmin();
-}
-
-function loadAgentsForAdmin(){
-  const list = JSON.parse(localStorage.getItem('agentList')||'[]');
-  const box = document.getElementById('agentAdminList');
-  box.innerHTML = '';
-  list.forEach((a,i)=>{
-    const div = document.createElement('div');
-    div.style.padding = '4px 0';
-    div.style.cursor = 'pointer';
-    div.innerText = `${i+1}. ${a.name} | QQ:${a.qq} | ${a.level} [点击删除]`;
-    div.onclick = () => deleteAgent(i);
-    box.appendChild(div);
-  });
+// 收款码
+let tmpQr = '';
+document.getElementById('qr').addEventListener('change',e=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = ev=>{
+    tmpQr = ev.target.result;
+    document.getElementById('qrPrev').src = tmpQr;
+    document.getElementById('qrPrev').style.display = 'block';
+  };
+  r.readAsDataURL(f);
+});
+function saveQr(){
+  if(!tmpQr){alert('请上传');return;}
+  localStorage.setItem('payQr',tmpQr);
+  alert('保存成功');
 }
 
 // 卡密
 function addCards(){
-  const type = document.getElementById('cardType').value;
-  const cards = document.getElementById('cardList').value.trim().split('\n').filter(c=>c.trim()!=='');
-  if(cards.length === 0) {
-    alert('请输入卡密');
-    return;
-  }
-  const old = JSON.parse(localStorage.getItem(`card_${type}`)||'[]');
-  const newCards = [...old, ...cards];
-  localStorage.setItem(`card_${type}`, JSON.stringify(newCards));
-  alert(`成功添加 ${cards.length} 个${type}卡密`);
-  document.getElementById('cardList').value = '';
+  const t = document.getElementById('ctype').value;
+  const cs = document.getElementById('cards').value.trim().split('\n').filter(x=>x);
+  const old = JSON.parse(localStorage.getItem('card_'+t)||'[]');
+  localStorage.setItem('card_'+t,JSON.stringify([...old,...cs]));
+  alert('添加成功');
+  document.getElementById('cards').value = '';
   loadCardCount();
 }
-
 function loadCardCount(){
-  const type = document.getElementById('cardType').value;
-  const cards = JSON.parse(localStorage.getItem(`card_${type}`)||'[]');
-  document.getElementById('cardCount').innerText = `${type}剩余卡密：${cards.length} 个`;
+  const t = document.getElementById('ctype').value;
+  const c = JSON.parse(localStorage.getItem('card_'+t)||'[]').length;
+  document.getElementById('cardCount').innerText = `库存：${c} 个`;
 }
 
-// ====================== 收款码 本地上传 ======================
-const qrFile = document.getElementById('qrFile');
-let tempQrBase64 = '';
+// 代理
+function addAgent(){
+  const n = document.getElementById('an').value.trim();
+  const q = document.getElementById('aq').value.trim();
+  const l = document.getElementById('al').value;
+  if(!n||!q){alert('请完整填写');return;}
+  const a = JSON.parse(localStorage.getItem('agentList')||'[]');
+  a.push({name:n,qq:q,level:l});
+  localStorage.setItem('agentList',JSON.stringify(a));
+  document.getElementById('an').value = '';
+  document.getElementById('aq').value = '';
+  loadAgents();
+}
+function deleteAgent(i){
+  if(!confirm('确定删除？')) return;
+  const a = JSON.parse(localStorage.getItem('agentList')||'[]');
+  a.splice(i,1);
+  localStorage.setItem('agentList',JSON.stringify(a));
+  loadAgents();
+}
+function loadAgents(){
+  const a = JSON.parse(localStorage.getItem('agentList')||'[]');
+  const b = document.getElementById('agentList');
+  b.innerHTML = '';
+  a.forEach((it,i)=>{
+    const d = document.createElement('div');
+    d.className = 'agent-item';
+    d.innerText = `${i+1}. ${it.name} | QQ:${it.qq} | ${it.level}  [点击删除]`;
+    d.onclick = ()=>deleteAgent(i);
+    b.appendChild(d);
+  });
+}
 
-qrFile.addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if(!file) return;
-  const reader = new FileReader();
-  reader.onload = function(ev) {
-    tempQrBase64 = ev.target.result;
-    document.getElementById('qrPreview').innerHTML = `<img src="${tempQrBase64}">`;
-  };
-  reader.readAsDataURL(file);
-});
+// 订单审核
+function loadOrders(){
+  const os = JSON.parse(localStorage.getItem('orders')||'[]');
+  const b = document.getElementById('orderList');
+  b.innerHTML = '';
+  os.filter(o=>o.status==='pending').forEach(o=>{
+    const d = document.createElement('div');
+    d.className = 'order';
+    d.innerHTML = `
+      <div class="title">用户：${o.user}</div>
+      <div>套餐：${o.type}  ¥${o.price}</div>
+      <div>尾号：${o.trail}</div>
+      <img src="${o.ss}">
+      <button class="btn" onclick="pass(${o.id})">通过并发卡</button>
+      <button class="btn btn-danger" onclick="reject(${o.id})">拒绝</button>
+    `;
+    b.appendChild(d);
+  });
+}
+function pass(oid){
+  const os = JSON.parse(localStorage.getItem('orders')||'[]');
+  const idx = os.findIndex(x=>x.id===oid);
+  if(idx===-1)return;
+  const o = os[idx];
+  const key = 'card_'+o.type;
+  const cards = JSON.parse(localStorage.getItem(key)||'[]');
+  if(cards.length===0){alert('卡密不足');return;}
+  const card = cards.shift();
+  localStorage.setItem(key,JSON.stringify(cards));
+  os[idx].status = 'success';
+  os[idx].card = card;
+  localStorage.setItem('orders',JSON.stringify(os));
+  alert('审核成功！卡密：'+card);
+  loadOrders();
+  loadCardCount();
+}
+function reject(oid){
+  const os = JSON.parse(localStorage.getItem('orders')||'[]');
+  const idx = os.findIndex(x=>x.id===oid);
+  os[idx].status = 'reject';
+  localStorage.setItem('orders',JSON.stringify(os));
+  alert('已拒绝');
+  loadOrders();
+}
 
-document.getElementById('qrUploadLabel').onclick = function() {
-  qrFile.click();
+window.onload = function(){
+  if(localStorage.getItem('admin')==='ok'){
+    document.getElementById('login').style.display = 'none';
+    document.getElementById('admin').style.display = 'block';
+    loadCardCount();
+    loadAgents();
+    loadOrders();
+  }
 };
-
-function savePayQr() {
-  if(!tempQrBase64) {
-    alert('请先上传收款码图片');
-    return;
-  }
-  localStorage.setItem('payQr', tempQrBase64);
-  alert('✅ 收款码已保存，用户购买时自动显示');
-}
-
-function loadPayQr() {
-  const qr = localStorage.getItem('payQr');
-  if(qr) {
-    document.getElementById('qrPreview').innerHTML = `<img src="${qr}">`;
-  }
-}
-// ============================================================
-
-function showMsg(id,text,type){
-  const m=document.getElementById(id);
-  m.innerText=text;
-  m.className='msg msg-'+type;
-  m.style.display='block';
-  setTimeout(()=>m.style.display='none',2000);
-}
-
-function saveNotice(){
-  localStorage.setItem('carrotNotice',document.getElementById('noticeText').value);
-  alert("✅ 公告已同步");
-}
-
-function saveApk(){
-  const u=document.getElementById('apkUrl').value.trim();
-  const n=document.getElementById('apkName').value.trim();
-  if(!u||!n){
-    showMsg('apkStatus','请填写完整','error');
-    return;
-  }
-  localStorage.setItem('apkDownload',JSON.stringify({url:u,name:n}));
-  showMsg('apkStatus','✅ 已同步到主站','success');
-}
-
-window.onload=function(){
-  createParticles();
-  if(localStorage.getItem('adminLogin')==='true')showAdmin();
-}
 </script>
 </body>
 </html>
