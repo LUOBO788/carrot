@@ -3,341 +3,154 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carrot Admin - 管理后台</title>
+<title>Carrot - 管理后台</title>
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
+*{margin:0;padding:0;box-sizing:border-box;}
 :root {
-  --bg: #000000;
-  --card: #121212;
+  --bg: #050507;
+  --card: #12151d;
   --text: #e0e6ff;
   --light-text: #a0b0d0;
-  --border: #223;
-  --accent: #00ccff;
+  --border: #252a3a;
+  --blue: #00d1ff;
+  --purple: #9d00ff;
+  --pink: #ff00d1;
+  --glow: 0 0 12px rgba(0,209,255,0.4);
 }
-
-body {
-  font-family: 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
-  background: linear-gradient(to bottom, #101010, #000);
-  color: var(--text);
-  line-height: 1.8;
-  min-height: 100vh;
-  padding-bottom: 40px;
-}
-
-.gradient-text {
-  font-weight: bold;
-  background: linear-gradient(90deg, #00f0ff, #0088ff, #8800ff, #00f0ff);
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: gradientFlow 6s linear infinite;
-}
-
-@keyframes gradientFlow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 300% 50%; }
-}
-
-.nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(10px);
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  z-index: 999;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 22px;
-}
-
-.logout-btn {
-  padding: 6px 12px;
-  background: #440000;
-  color: #ff6666;
-  border: 1px solid #660000;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.container {
-  max-width: 900px;
-  margin: 90px auto 0;
-  padding: 0 20px;
-}
-
-.login-box {
-  max-width: 400px;
-  margin: 100px auto;
-  background: #151515;
-  padding: 30px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  text-align: center;
-}
-
-.login-box h2 {
-  margin-bottom: 20px;
-}
-
-.login-box input {
-  width: 100%;
-  padding: 14px 16px;
-  margin-bottom: 14px;
-  background: #181818;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--text);
-  font-size: 15px;
-  outline: none;
-}
-
-.login-box input:focus {
-  border-color: #0088ff;
-}
-
-.login-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  background: linear-gradient(90deg, #00f0ff, #0088ff);
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  margin-top: 6px;
-}
-
-.admin-section {
-  display: none;
-}
-
-.section-title {
-  font-size: 20px;
-  margin: 20px 0;
-}
-
-.card {
-  background: #151515;
-  border-radius: 12px;
-  padding: 20px;
-  margin-bottom: 20px;
-  border: 1px var(--border);
-}
-
-.card h3 {
-  margin-bottom: 15px;
-  font-size: 16px;
-}
-
-.user-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.user-table th, .user-table td {
-  padding: 10px;
-  text-align: left;
-  border-bottom: 1px solid var(--border);
-  font-size: 14px;
-}
-
-.notice-input {
-  width: 100%;
-  padding: 12px;
-  background: #181818;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  margin-bottom: 10px;
-  min-height: 80px;
-  resize: none;
-}
-
-.save-btn {
-  padding: 8px 16px;
-  background: #004422;
-  color: #00ff88;
-  border: 1px solid #006633;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-.msg {
-  padding: 10px;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  text-align: center;
-  display: none;
-}
-
-.msg-success {
-  background: #004422;
-  color: #00ff88;
-}
-
-.msg-error {
-  background: #440000;
-  color: #ff6666;
-}
+#particles {position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;}
+body {font-family:'Segoe UI',Roboto,'Microsoft YaHei',sans-serif;background:#050507;color:var(--text);line-height:1.8;min-height:100vh;padding-bottom:40px;overflow-x:hidden;}
+.gradient-text {font-weight:bold;background:linear-gradient(90deg,var(--blue),var(--purple),var(--pink));background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:flow 4s linear infinite;}
+@keyframes flow {0%{background-position:0% 50%;}100%{background-position:250% 50%;}}
+.nav {position:fixed;top:0;width:100%;background:rgba(10,12,18,0.85);backdrop-filter:blur(12px);border-bottom:1px solid rgba(255,255,255,0.05);padding:16px 20px;display:flex;align-items:center;justify-content:space-between;z-index:999;}
+.logo {font-size:20px;font-weight:bold;}
+.logout-btn {padding:8px 16px;border-radius:10px;background:rgba(255,64,124,0.1);color:#ff407c;border:1px solid rgba(255,64,124,0.2);font-size:13px;cursor:pointer;display:none;}
+.container {max-width:500px;margin:90px auto 0;padding:20px;}
+.login-box {background:rgba(20,23,32,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:20px;padding:40px 30px;text-align:center;box-shadow:0 8px 30px rgba(0,0,0,0.2);}
+.login-box h2 {margin-bottom:30px;}
+.login-box input {width:100%;padding:16px;margin-bottom:16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:14px;color:var(--text);font-size:15px;outline:none;transition:0.3s;}
+.login-box input:focus {border-color:var(--blue);box-shadow:var(--glow);}
+.login-btn {width:100%;padding:16px;border-radius:14px;background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff;font-weight:bold;border:none;cursor:pointer;transition:0.3s;box-shadow:0 6px 18px rgba(0,209,255,0.2);}
+.login-btn:hover {transform:translateY(-3px);}
+.admin-section {display:none;}
+.section-title {margin:20px 0;text-align:center;}
+.card {background:rgba(20,23,32,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:18px;padding:24px;margin-bottom:20px;}
+.card h3 {margin-bottom:16px;font-size:16px;}
+.user-table {width:100%;border-collapse:collapse;}
+.user-table th,.user-table td {padding:12px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.05);font-size:14px;}
+.notice-input {width:100%;padding:16px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:14px;color:var(--text);min-height:120px;margin-bottom:16px;outline:none;resize:none;}
+.save-btn {width:100%;padding:14px;border-radius:12px;background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff;font-weight:bold;border:none;cursor:pointer;transition:0.3s;}
+.save-btn:hover {transform:translateY(-2px);}
+input.apk-input {width:100%;padding:14px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;color:var(--text);margin-bottom:12px;outline:none;}
+.msg {padding:10px;border-radius:10px;margin:10px 0;text-align:center;display:none;font-size:14px;}
+.msg-success {background:rgba(0,255,136,0.08);color:#00ff88;border:1px solid rgba(0,255,136,0.1);}
+.msg-error {background:rgba(255,64,124,0.08);color:#ff407c;border:1px solid rgba(255,64,124,0.1);}
+.current-info {background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;margin-top:10px;font-size:13px;color:var(--light-text);}
 </style>
 </head>
-
 <body>
-
+<div id="particles"></div>
 <div class="nav">
   <div class="logo gradient-text">🥕 Carrot 管理后台</div>
-  <button class="logout-btn" onclick="adminLogout()" style="display:none;" id="logoutBtn">退出登录</button>
+  <button class="logout-btn" id="logoutBtn" onclick="adminLogout()">退出登录</button>
 </div>
-
 <div class="container">
   <div class="login-box" id="loginBox">
     <h2 class="gradient-text">管理员登录</h2>
-    <div id="msg" class="msg"></div>
     <input type="text" id="adminUser" placeholder="管理员账号">
     <input type="password" id="adminPwd" placeholder="管理员密码">
     <button class="login-btn" onclick="adminLogin()">立即登录</button>
   </div>
-
   <div class="admin-section" id="adminPanel">
-    <h2 class="section-title gradient-text">控制面板</h2>
-
+    <h2 class="gradient-text section-title">控制面板</h2>
     <div class="card">
       <h3 class="gradient-text">用户列表</h3>
       <table class="user-table">
-        <thead>
-          <tr>
-            <th>用户名</th>
-            <th>会员等级</th>
-            <th>到期时间</th>
-          </tr>
-        </thead>
+        <thead><tr><th>用户名</th><th>等级</th><th>状态</th></tr></thead>
         <tbody id="userList"></tbody>
       </table>
     </div>
-
     <div class="card">
-      <h3 class="gradient-text">首页公告管理</h3>
-      <textarea class="notice-input" id="noticeText" placeholder="输入公告内容，将同步到主站"></textarea>
+      <h3 class="gradient-text">公告管理</h3>
+      <textarea class="notice-input" id="noticeText" placeholder="输入公告内容"></textarea>
       <button class="save-btn" onclick="saveNotice()">保存公告</button>
     </div>
-
     <div class="card">
-      <h3 class="gradient-text">📦 APK 下载设置（秒上传不卡顿）</h3>
-      <input type="text" id="apkUrl" placeholder="输入 APK 下载链接" style="width:100%;padding:12px;background:#181818;border:1px solid #223;border-radius:8px;color:#fff;margin-bottom:10px;">
-      <input type="text" id="apkName" placeholder="输入版本名 如 v1.2.0" style="width:100%;padding:12px;background:#181818;border:1px solid #223;border-radius:8px;color:#fff;margin-bottom:10px;">
-      <button class="save-btn" onclick="saveApk()">保存并同步到主站</button>
+      <h3 class="gradient-text">APK 下载设置</h3>
+      <input class="apk-input" type="text" id="apkUrl" placeholder="APK 下载链接">
+      <input class="apk-input" type="text" id="apkName" placeholder="版本名（如 v1.2.0）">
+      <button class="save-btn" onclick="saveApk()">保存并同步</button>
       <div id="apkStatus" class="msg"></div>
-      <div id="currentApk" style="margin-top:12px;padding:10px;background:#181818;border-radius:6px;"></div>
+      <div id="currentApk" class="current-info"></div>
     </div>
-
     <div class="card">
       <h3 class="gradient-text">系统信息</h3>
-      <p>当前版本：v1.2.0</p>
-      <p>配套主站：Carrot 辅助官网</p>
-      <p>管理权限：最高管理员</p>
-      <p>管理模式：前端本地管理</p>
+      <p>• 版本：v1.2.0 科技美化版</p>
+      <p>• 状态：正常运行</p>
+      <p>• 风格：统一科技渐变</p>
     </div>
   </div>
 </div>
-
 <script>
+function createParticles(){
+  const p=document.getElementById('particles');
+  for(let i=0;i<40;i++){
+    let d=document.createElement('div');
+    d.style.cssText=`position:absolute;width:${Math.random()*2+1}px;height:${Math.random()*2+1}px;background:#00d1ff;border-radius:50%;top:${Math.random()*100}%;left:${Math.random()*100}%;opacity:${Math.random()*0.5+0.2};box-shadow:0 0 4px #00d1ff;animation:f ${Math.random()*5+3}s linear infinite`;
+    p.appendChild(d);
+  }
+  let s=document.createElement('style');
+  s.innerHTML='@keyframes f{0%{transform:translate(0,0);}50%{transform:translate(6px,6px);}100%{transform:translate(0,0);}}';
+  document.head.appendChild(s);
+}
+
 const ADMIN_USER = "LUOBO";
 const ADMIN_PWD = "tianniWZ1030LJH";
 
-function adminLogin() {
-  const user = document.getElementById('adminUser').value.trim();
-  const pwd = document.getElementById('adminPwd').value.trim();
-  const msg = document.getElementById('msg');
-
-  if(user === ADMIN_USER && pwd === ADMIN_PWD) {
-    localStorage.setItem('adminLogin', 'true');
+function adminLogin(){
+  const u=document.getElementById('adminUser').value.trim();
+  const p=document.getElementById('adminPwd').value.trim();
+  if(u===ADMIN_USER&&p===ADMIN_PWD){
+    localStorage.setItem('adminLogin','true');
     showAdmin();
-  } else {
-    msg.innerText = "❌ 账号或密码错误";
-    msg.className = "msg msg-error";
-    msg.style.display = "block";
-  }
+  }else{alert("账号或密码错误");}
 }
 
-function showAdmin() {
-  document.getElementById('loginBox').style.display = "none";
-  document.getElementById('adminPanel').style.display = "block";
-  document.getElementById('logoutBtn').style.display = "block";
+function showAdmin(){
+  document.getElementById('loginBox').style.display="none";
+  document.getElementById('adminPanel').style.display="block";
+  document.getElementById('logoutBtn').style.display="block";
   loadUserList();
   loadNotice();
   showCurrentApk();
 }
-
-function adminLogout() {
-  localStorage.removeItem('adminLogin');
-  location.reload();
-}
-
-function loadUserList() {
-  const userList = JSON.parse(localStorage.getItem('carrotUsers') || '[]');
-  const tbody = document.getElementById('userList');
-  tbody.innerHTML = "";
-  userList.forEach(u => {
-    let tr = document.createElement('tr');
-    tr.innerHTML = `<td>${u.username}</td><td>普通用户</td><td>未开通</td>`;
-    tbody.appendChild(tr);
+function adminLogout(){localStorage.removeItem('adminLogin');location.reload();}
+function loadUserList(){
+  const list=JSON.parse(localStorage.getItem('carrotUsers')||'[]');
+  const b=document.getElementById('userList');
+  b.innerHTML='';
+  list.forEach(u=>{
+    let tr=document.createElement('tr');
+    tr.innerHTML=`<td>${u.username}</td><td>普通用户</td><td>正常</td>`;
+    b.appendChild(tr);
   });
 }
-
-function loadNotice() {
-  const notice = localStorage.getItem('carrotNotice') || "📢 v1.2.0 版本已更新\n📢 祝各位用户使用愉快";
-  document.getElementById('noticeText').value = notice;
-}
-
-function saveNotice() {
-  const text = document.getElementById('noticeText').value.trim();
-  localStorage.setItem('carrotNotice', text);
-  alert("✅ 公告已同步到主站！");
-}
-
-function saveApk() {
-  const url = document.getElementById('apkUrl').value.trim();
-  const name = document.getElementById('apkName').value.trim();
-  if(!url || !name) {
-    const s = document.getElementById('apkStatus');
-    s.innerText = "❌ 请填写完整";
-    s.className = "msg msg-error";
-    s.style.display = "block";
-    return;
-  }
-  localStorage.setItem('apkDownload', JSON.stringify({url,name}));
-  const s = document.getElementById('apkStatus');
-  s.innerText = "✅ 已同步主站下载！";
-  s.className = "msg msg-success";
-  s.style.display = "block";
+function loadNotice(){document.getElementById('noticeText').value=localStorage.getItem('carrotNotice')||'';}
+function saveNotice(){localStorage.setItem('carrotNotice',document.getElementById('noticeText').value);alert("✅ 公告已同步");}
+function saveApk(){
+  const u=document.getElementById('apkUrl').value.trim();
+  const n=document.getElementById('apkName').value.trim();
+  if(!u||!n){document.getElementById('apkStatus').innerText="请填写完整";document.getElementById('apkStatus').className="msg msg-error";document.getElementById('apkStatus').style.display="block";return;}
+  localStorage.setItem('apkDownload',JSON.stringify({url:u,name:n}));
+  document.getElementById('apkStatus').innerText="✅ 已同步到主站";
+  document.getElementById('apkStatus').className="msg msg-success";
+  document.getElementById('apkStatus').style.display="block";
   showCurrentApk();
 }
-
-function showCurrentApk() {
-  const d = document.getElementById('currentApk');
-  const a = localStorage.getItem('apkDownload');
-  if(!a) { d.innerText = "当前未设置下载"; return; }
-  const j = JSON.parse(a);
-  d.innerText = `版本：${j.name} ｜ 已同步`;
+function showCurrentApk(){
+  const a=localStorage.getItem('apkDownload');
+  if(a){const j=JSON.parse(a);document.getElementById('currentApk').innerText=`当前版本：${j.name}`;}
 }
-
-window.onload = function() {
-  if(localStorage.getItem('adminLogin') === 'true') showAdmin();
-}
+window.onload=function(){createParticles();if(localStorage.getItem('adminLogin')==='true')showAdmin();}
 </script>
 </body>
 </html>
