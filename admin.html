@@ -28,6 +28,8 @@ body{background:#050507;color:var(--text);font-family:Segoe UI,Microsoft YaHei,s
   cursor:pointer;margin:4px;
 }
 .btn-danger{background:rgba(255,64,124,.2);color:#ff407c;}
+.btn-tab{background:#222;color:#fff;border:1px solid #333;}
+.btn-tab.active{background:linear-gradient(90deg,var(--blue),var(--purple));border-color:transparent;}
 .container{max-width:600px;margin:80px auto;padding:20px;}
 .card{
   background:var(--card);border-radius:16px;padding:20px;
@@ -52,6 +54,9 @@ input,textarea,select{
 .agent-item{
   padding:8px 0;cursor:pointer;color:#eee;
 }
+.order-tabs{
+  display:flex;gap:8px;margin-bottom:12px;
+}
 </style>
 </head>
 <body>
@@ -62,6 +67,13 @@ input,textarea,select{
 </div>
 
 <div class="container" id="admin" style="display:none;">
+
+  <div class="card">
+    <h3>网站公告</h3>
+    <textarea id="noticeContent" rows="3" placeholder="输入公告内容，用户首页会显示"></textarea>
+    <button class="btn" onclick="saveNotice()">保存公告</button>
+  </div>
+
   <div class="card">
     <h3>收款码设置</h3>
     <div class="upload" onclick="document.getElementById('qr').click()">点击上传收款码</div>
@@ -96,7 +108,12 @@ input,textarea,select{
   </div>
 
   <div class="card">
-    <h3>待审核订单</h3>
+    <h3>订单管理</h3>
+    <div class="order-tabs">
+      <button class="btn btn-tab active" onclick="loadOrderTab('pending')">待审核</button>
+      <button class="btn btn-tab" onclick="loadOrderTab('success')">已完成</button>
+      <button class="btn btn-tab" onclick="loadOrderTab('reject')">已拒绝</button>
+    </div>
     <div id="orderList"></div>
   </div>
 </div>
@@ -113,6 +130,7 @@ input,textarea,select{
 <script>
 const ADMIN_USER = "LUOBO";
 const ADMIN_PWD = "tianniWZ1030LJH";
+let currentOrderTab = 'pending';
 
 function login(){
   const u = document.getElementById('user').value;
@@ -130,7 +148,12 @@ function logout(){
   location.reload();
 }
 
-// 收款码
+function saveNotice(){
+  const c = document.getElementById('noticeContent').value.trim();
+  localStorage.setItem('siteNotice',c);
+  alert('公告保存成功');
+}
+
 let tmpQr = '';
 document.getElementById('qr').addEventListener('change',e=>{
   const f = e.target.files[0];
@@ -149,7 +172,6 @@ function saveQr(){
   alert('保存成功');
 }
 
-// 卡密
 function addCards(){
   const t = document.getElementById('ctype').value;
   const cs = document.getElementById('cards').value.trim().split('\n').filter(x=>x);
@@ -165,7 +187,6 @@ function loadCardCount(){
   document.getElementById('cardCount').innerText = `库存：${c} 个`;
 }
 
-// 代理
 function addAgent(){
   const n = document.getElementById('an').value.trim();
   const q = document.getElementById('aq').value.trim();
@@ -198,25 +219,42 @@ function loadAgents(){
   });
 }
 
-// 订单审核
+function loadOrderTab(type){
+  currentOrderTab = type;
+  document.querySelectorAll('.btn-tab').forEach(t=>t.classList.remove('active'));
+  event.target.classList.add('active');
+  loadOrders();
+}
+
 function loadOrders(){
   const os = JSON.parse(localStorage.getItem('orders')||'[]');
   const b = document.getElementById('orderList');
   b.innerHTML = '';
-  os.filter(o=>o.status==='pending').forEach(o=>{
+  os.filter(o=>o.status===currentOrderTab).forEach(o=>{
     const d = document.createElement('div');
     d.className = 'order';
+    let btnHtml = '';
+    if(o.status === 'pending'){
+      btnHtml = `
+        <button class="btn" onclick="pass(${o.id})">通过并发卡</button>
+        <button class="btn btn-danger" onclick="reject(${o.id})">拒绝</button>
+      `;
+    } else if(o.status === 'success'){
+      btnHtml = `<div style="color:#00ff88">已发卡：${o.card}</div>`;
+    } else {
+      btnHtml = `<div style="color:#ff407c">已拒绝</div>`;
+    }
     d.innerHTML = `
       <div class="title">用户：${o.user}</div>
       <div>套餐：${o.type}  ¥${o.price}</div>
       <div>尾号：${o.trail}</div>
       <img src="${o.ss}">
-      <button class="btn" onclick="pass(${o.id})">通过并发卡</button>
-      <button class="btn btn-danger" onclick="reject(${o.id})">拒绝</button>
+      ${btnHtml}
     `;
     b.appendChild(d);
   });
 }
+
 function pass(oid){
   const os = JSON.parse(localStorage.getItem('orders')||'[]');
   const idx = os.findIndex(x=>x.id===oid);
@@ -234,6 +272,7 @@ function pass(oid){
   loadOrders();
   loadCardCount();
 }
+
 function reject(oid){
   const os = JSON.parse(localStorage.getItem('orders')||'[]');
   const idx = os.findIndex(x=>x.id===oid);
@@ -247,6 +286,9 @@ window.onload = function(){
   if(localStorage.getItem('admin')==='ok'){
     document.getElementById('login').style.display = 'none';
     document.getElementById('admin').style.display = 'block';
+    const notice = localStorage.getItem('siteNotice') || '';
+    document.getElementById('noticeContent').value = notice;
+    
     loadCardCount();
     loadAgents();
     loadOrders();
