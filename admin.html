@@ -45,6 +45,7 @@ input.apk-input {width:100%;padding:14px;background:rgba(255,255,255,0.05);borde
 .msg-success {background:rgba(0,255,136,0.08);color:#00ff88;border:1px solid rgba(0,255,136,0.1);}
 .msg-error {background:rgba(255,64,124,0.08);color:#ff407c;border:1px solid rgba(255,64,124,0.1);}
 .current-info {background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;margin-top:10px;font-size:13px;color:var(--light-text);}
+.agent-input {width:100%;padding:14px;margin-bottom:10px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;color:var(--text);}
 </style>
 </head>
 <body>
@@ -60,20 +61,41 @@ input.apk-input {width:100%;padding:14px;background:rgba(255,255,255,0.05);borde
     <input type="password" id="adminPwd" placeholder="管理员密码">
     <button class="login-btn" onclick="adminLogin()">立即登录</button>
   </div>
+
   <div class="admin-section" id="adminPanel">
     <h2 class="gradient-text section-title">控制面板</h2>
+
+    <div class="card">
+      <h3 class="gradient-text">添加代理</h3>
+      <input class="agent-input" id="agentName" placeholder="代理名称">
+      <input class="agent-input" id="agentQQ" placeholder="代理QQ号">
+      <select class="agent-input" id="agentLevel">
+        <option value="总代理">总代理</option>
+        <option value="代理">代理</option>
+      </select>
+      <button class="save-btn" onclick="addAgent()">添加代理</button>
+      <div id="agentMsg" class="msg"></div>
+    </div>
+
+    <div class="card">
+      <h3 class="gradient-text">代理列表</h3>
+      <div id="agentAdminList" style="font-size:14px;color:var(--light-text);"></div>
+    </div>
+
     <div class="card">
       <h3 class="gradient-text">用户列表</h3>
       <table class="user-table">
-        <thead><tr><th>用户名</th><th>等级</th><th>状态</th></tr></thead>
+        <thead><tr><th>用户名</th></tr></thead>
         <tbody id="userList"></tbody>
       </table>
     </div>
+
     <div class="card">
       <h3 class="gradient-text">公告管理</h3>
       <textarea class="notice-input" id="noticeText" placeholder="输入公告内容"></textarea>
       <button class="save-btn" onclick="saveNotice()">保存公告</button>
     </div>
+
     <div class="card">
       <h3 class="gradient-text">APK 下载设置</h3>
       <input class="apk-input" type="text" id="apkUrl" placeholder="APK 下载链接">
@@ -82,14 +104,9 @@ input.apk-input {width:100%;padding:14px;background:rgba(255,255,255,0.05);borde
       <div id="apkStatus" class="msg"></div>
       <div id="currentApk" class="current-info"></div>
     </div>
-    <div class="card">
-      <h3 class="gradient-text">系统信息</h3>
-      <p>• 版本：v1.2.0 科技美化版</p>
-      <p>• 状态：正常运行</p>
-      <p>• 风格：统一科技渐变</p>
-    </div>
   </div>
 </div>
+
 <script>
 function createParticles(){
   const p=document.getElementById('particles');
@@ -120,37 +137,73 @@ function showAdmin(){
   document.getElementById('adminPanel').style.display="block";
   document.getElementById('logoutBtn').style.display="block";
   loadUserList();
-  loadNotice();
-  showCurrentApk();
+  loadAgentsForAdmin();
 }
+
 function adminLogout(){localStorage.removeItem('adminLogin');location.reload();}
+
 function loadUserList(){
   const list=JSON.parse(localStorage.getItem('carrotUsers')||'[]');
   const b=document.getElementById('userList');
   b.innerHTML='';
   list.forEach(u=>{
     let tr=document.createElement('tr');
-    tr.innerHTML=`<td>${u.username}</td><td>普通用户</td><td>正常</td>`;
+    tr.innerHTML=`<td>${u.username}</td>`;
     b.appendChild(tr);
   });
 }
-function loadNotice(){document.getElementById('noticeText').value=localStorage.getItem('carrotNotice')||'';}
+
+// 代理管理
+function addAgent(){
+  const name = document.getElementById('agentName').value.trim();
+  const qq = document.getElementById('agentQQ').value.trim();
+  const level = document.getElementById('agentLevel').value;
+  if(!name || !qq){
+    showMsg('agentMsg','请填写完整','error');
+    return;
+  }
+  const list = JSON.parse(localStorage.getItem('agentList')||'[]');
+  list.push({name, qq, level});
+  localStorage.setItem('agentList',JSON.stringify(list));
+  showMsg('agentMsg','添加成功','success');
+  document.getElementById('agentName').value='';
+  document.getElementById('agentQQ').value='';
+  loadAgentsForAdmin();
+}
+
+function loadAgentsForAdmin(){
+  const list = JSON.parse(localStorage.getItem('agentList')||'[]');
+  const box = document.getElementById('agentAdminList');
+  box.innerHTML = '';
+  list.forEach((a,i)=>{
+    const div = document.createElement('div');
+    div.style.padding = '4px 0';
+    div.innerText = `${i+1}. ${a.name} | QQ:${a.qq} | ${a.level}`;
+    box.appendChild(div);
+  });
+}
+
+function showMsg(id,text,type){
+  const m=document.getElementById(id);
+  m.innerText=text;
+  m.className='msg msg-'+type;
+  m.style.display='block';
+  setTimeout(()=>m.style.display='none',2000);
+}
+
 function saveNotice(){localStorage.setItem('carrotNotice',document.getElementById('noticeText').value);alert("✅ 公告已同步");}
 function saveApk(){
   const u=document.getElementById('apkUrl').value.trim();
   const n=document.getElementById('apkName').value.trim();
-  if(!u||!n){document.getElementById('apkStatus').innerText="请填写完整";document.getElementById('apkStatus').className="msg msg-error";document.getElementById('apkStatus').style.display="block";return;}
+  if(!u||!n){showMsg('apkStatus','请填写完整','error');return;}
   localStorage.setItem('apkDownload',JSON.stringify({url:u,name:n}));
-  document.getElementById('apkStatus').innerText="✅ 已同步到主站";
-  document.getElementById('apkStatus').className="msg msg-success";
-  document.getElementById('apkStatus').style.display="block";
-  showCurrentApk();
+  showMsg('apkStatus','✅ 已同步到主站','success');
 }
-function showCurrentApk(){
-  const a=localStorage.getItem('apkDownload');
-  if(a){const j=JSON.parse(a);document.getElementById('currentApk').innerText=`当前版本：${j.name}`;}
+
+window.onload=function(){
+  createParticles();
+  if(localStorage.getItem('adminLogin')==='true')showAdmin();
 }
-window.onload=function(){createParticles();if(localStorage.getItem('adminLogin')==='true')showAdmin();}
 </script>
 </body>
 </html>
