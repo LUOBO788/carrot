@@ -14,14 +14,13 @@
   --bg: #050507;
   --card: #12151d;
   --text: #e0e6ff;
-  --light-text: #a0b0d0;
-  --border: #252a3a;
+  --light-text: #a0b0d7;
+  --border: #252a33;
   --blue: #00d1ff;
   --purple: #9d00ff;
   --pink: #ff00d1;
-  --glow: 0 0 12px rgba(0,209,255,0.4);
+  --glow: 0 0 12px rgba(0,209,255,0.2);
 }
-
 #particles {
   position: fixed;
   top: 0;
@@ -30,465 +29,323 @@
   height: 100%;
   z-index: -1;
 }
-
 body {
-  font-family: 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
   background: #050507;
   color: var(--text);
-  line-height: 1.8;
+  font-family: 'Segoe UI','Microsoft YaHei',sans-serif;
+  line-height: 1.6;
   min-height: 100vh;
-  padding-bottom: 40px;
-  overflow-x: hidden;
+  padding-bottom: 60px;
 }
-
-#splash {
+.gradient-text {
+  background: linear-gradient(90deg,var(--blue),var(--purple),var(--pink));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: flow 4s linear infinite;
+  background-size: 250% 100%;
+}
+@keyframes flow{
+  0%{background-position:0% 50%;}
+  100%{background-position:250% 50%;}
+}
+.nav{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(10,12,18,0.85);
+  backdrop-filter: blur(12px);
+  padding: 16px;
+  text-align: center;
+  z-index: 99;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.logo{
+  font-size: 22px;
+  font-weight: bold;
+}
+.hero{
+  padding: 100px 20px 30px;
+  text-align: center;
+}
+.hero h1{
+  margin-bottom: 10px;
+}
+.hero p{
+  color: var(--light-text);
+}
+.user-center{
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 20px;
+}
+.user-tabs{
+  display: flex;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(18,20,28,0.6);
+  margin-bottom: 20px;
+}
+.user-tab{
+  flex: 1;
+  padding: 14px;
+  text-align: center;
+  cursor: pointer;
+  font-weight: 600;
+}
+.user-tab.active{
+  background: linear-gradient(90deg,var(--blue),var(--purple));
+}
+.user-form{
+  display: none;
+}
+.user-form.active{
+  display: block;
+}
+input{
+  width: 100%;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 12px;
+  color: #fff;
+  outline: none;
+}
+.submit-btn{
+  width: 100%;
+  background: linear-gradient(90deg,var(--blue),var(--purple));
+  color: #fff;
+  border: none;
+  border-radius: 14px;
+  padding: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.user-page{
+  display: none;
+}
+.user-card{
+  background: var(--card);
+  border-radius: 18px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+.user-btns{
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+.user-btns button{
+  flex: 1;
+}
+.btn-exit{
+  background: rgba(255,64,124,0.1) !important;
+  color: #ff407c !important;
+}
+.price-cards{
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 20px 0;
+}
+.price-card{
+  background: var(--card);
+  border-radius: 14px;
+  padding: 18px;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  transition: 0.3s;
+}
+.price-card:hover{
+  transform: translateY(-3px);
+  border-color: var(--blue);
+}
+.price{
+  font-size: 18px;
+  color: var(--blue);
+  font-weight: bold;
+  margin-top: 6px;
+}
+.btn{
+  background: linear-gradient(90deg,var(--blue),var(--purple));
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 6px;
+}
+.modal{
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: #050507;
-  display: flex;
+  background: rgba(0,0,0,0.85);
+  display: none;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
   z-index: 9999;
-  transition: opacity 0.6s ease;
 }
-#splash.hidden {
-  opacity: 0;
-  pointer-events: none;
+.modal-box{
+  background: #12151d;
+  border-radius: 20px;
+  padding: 28px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
 }
-.splash-logo {
-  font-size: 36px;
-  background: linear-gradient(90deg, var(--blue), var(--purple));
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  margin-bottom: 20px;
-  animation: bounce 1.5s infinite;
+.modal-box img{
+  max-width: 220px;
+  margin: 10px auto;
+  border-radius: 12px;
 }
-@keyframes bounce {
-  0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}
+.upload-area{
+  border: 2px dashed #555;
+  border-radius: 12px;
+  padding: 20px;
+  margin: 12px 0;
+  cursor: pointer;
 }
-.loading-bar {
-  width: 160px;
-  height: 4px;
-  background: rgba(255,255,255,0.1);
-  border-radius: 2px;
-  overflow: hidden;
+.upload-area:hover{
+  border-color: var(--blue);
 }
-.loading-progress {
-  height: 100%;
-  width: 0%;
-  background: linear-gradient(90deg, var(--blue), var(--purple));
-  animation: load 1.4s forwards;
+#screenshot{
+  display: none;
 }
-@keyframes load {100%{width:100%;}}
-
-.gradient-text {
-  font-weight: bold;
-  background: linear-gradient(90deg, var(--blue), var(--purple), var(--pink));
-  background-size: 250% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: flow 4s linear infinite;
+.agent-list{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 20px 0;
 }
-@keyframes flow {0%{background-position:0% 50%;}100%{background-position:250% 50%;}}
-
-.nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: rgba(10,12,18,0.85);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(255,255,255,0.05);
-  padding: 16px 20px;
+.agent-item{
+  background: var(--card);
+  border-radius: 14px;
+  padding: 14px;
   display: flex;
   align-items: center;
-  justify-content: center;
-  z-index: 999;
+  gap: 12px;
 }
-.logo {font-size:24px;font-weight:bold;}
-
-.hero {
-  padding: 50px 20px 30px;
+.agent-avatar{
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #222;
+}
+.msg{
+  padding: 12px;
+  border-radius: 12px;
   text-align: center;
-  margin-top: 60px;
+  margin: 10px 0;
+  display: none;
 }
-.hero h1 {font-size:28px;margin-bottom:10px;}
-.hero p {color:var(--light-text);font-size:15px;margin-bottom:24px;}
-
-.buttons {display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
-.btn {padding:14px 26px;border-radius:12px;border:none;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.3s ease;}
-.btn-gradient {background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff;box-shadow:0 6px 20px rgba(0,209,255,0.2);}
-.btn-gradient:hover {transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,209,255,0.35);}
-
-.user-center {max-width:420px;margin:0 auto;padding:20px;}
-.user-tabs {display:flex;border-radius:14px;overflow:hidden;background:rgba(18,20,28,0.6);margin-bottom:20px;}
-.user-tab {flex:1;padding:14px;text-align:center;color:var(--light-text);cursor:pointer;font-weight:600;transition:0.3s;}
-.user-tab.active {background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff;}
-
-.user-form {display:none;}
-.user-form.active {display:block;}
-.user-form input {width:100%;padding:16px;margin-bottom:14px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:14px;color:var(--text);font-size:15px;outline:none;transition:0.3s;}
-.user-form input:focus {border-color:var(--blue);box-shadow:var(--glow);}
-.submit-btn {width:100%;padding:16px;border-radius:14px;background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff;font-weight:bold;border:none;cursor:pointer;transition:0.3s;box-shadow:0 6px 18px rgba(0,209,255,0.2);}
-.submit-btn:hover {transform:translateY(-3px);}
-
-.user-logined {display:none;}
-.user-card {background:rgba(20,23,32,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:18px;padding:28px 20px;text-align:center;margin-bottom:22px;}
-.user-avatar {width:76px;height:76px;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 0 20px rgba(0,209,255,0.3);}
-.user-name {font-size:22px;margin-bottom:8px;}
-.user-vip {display:inline-block;padding:5px 12px;background:rgba(0,209,255,0.1);color:var(--blue);border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:6px;}
-.user-expire {font-size:13px;color:var(--light-text);}
-
-.user-btns {display:flex;gap:12px;margin-bottom:24px;}
-.user-btns .btn {flex:1;padding:16px 0;border-radius:14px;font-size:15px;}
-.btn-exit {background:rgba(255,64,124,0.1);color:#ff407c;border:1px solid rgba(255,64,124,0.2);}
-
-.user-package,.user-notice {background:rgba(20,23,32,0.5);border:1px solid rgba(255,255,255,0.04);border-radius:16px;padding:20px;margin-bottom:18px;}
-.user-package h3,.user-notice h3 {margin-bottom:12px;font-size:16px;}
-.package-item,.notice-item {font-size:14px;color:var(--light-text);padding:4px 0;}
-
-.user-links {display:flex;gap:12px;margin-bottom:26px;}
-.link-item {flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:16px 8px;text-align:center;font-size:12px;}
-.link-item .icon {font-size:22px;margin-bottom:6px;color:var(--blue);}
-
-.collapse-box {margin-bottom:10px;}
-.collapse-btn {width:100%;background:rgba(22,25,34,0.7);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:16px 20px;text-align:left;color:var(--text);font-size:15px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:0.3s;}
-.collapse-btn.active {border-color:var(--blue);background:rgba(22,25,34,0.9);}
-.collapse-btn span {color:var(--blue);font-size:18px;transition:0.3s;}
-.collapse-btn.active span {transform:rotate(180deg);}
-.collapse-body {max-height:0;overflow:hidden;transition:max-height 0.4s ease;}
-.collapse-content {background:rgba(18,20,28,0.4);border-radius:0 0 16px 16px;padding:18px 20px;border:1px solid rgba(255,255,255,0.04);border-top:none;}
-.feature-grid {display:grid;grid-template-columns:1fr 1fr;gap:8px;}
-.feature-item {font-size:13px;color:var(--light-text);display:flex;align-items:center;}
-.feature-item::before {content:"●";color:var(--blue);font-size:10px;margin-right:6px;}
-
-.price-cards {display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:10px 0 20px;}
-.price-card {background:rgba(20,23,32,0.5);border:1px solid rgba(255,255,255,0.04);border-radius:14px;padding:18px 12px;text-align:center;cursor:pointer;transition:0.3s;}
-.price-card:hover {transform:translateY(-3px);border-color:var(--blue);}
-.price {font-size:18px;color:var(--blue);font-weight:bold;}
-
-.msg {padding:12px;border-radius:12px;margin-bottom:14px;text-align:center;display:none;font-weight:600;}
-.msg-success {background:rgba(0,255,136,0.08);color:#00ff88;border:1px solid rgba(0,255,136,0.1);}
-.msg-error {background:rgba(255,64,124,0.08);color:#ff407c;border:1px solid rgba(255,64,124,0.1);}
-
-.disclaimer {background:rgba(20,23,32,0.4);border-left:3px solid var(--blue);border-radius:12px;padding:16px;font-size:12px;color:var(--light-text);margin:20px 0;}
-.footer {padding:30px 20px;text-align:center;color:#668;font-size:13px;}
-
-/* 代理样式 */
-.agent-section {margin:30px 0;}
-.agent-list {display:flex;flex-direction:column;gap:12px;}
-.agent-item {background:rgba(20,23,32,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;}
-.agent-avatar {width:50px;height:50px;border-radius:50%;object-fit:cover;background:#111;}
-.agent-info {flex:1;}
-.agent-name {font-size:16px;font-weight:bold;color:var(--text);}
-.agent-qq {font-size:12px;color:var(--light-text);}
-.agent-level {font-size:12px;padding:2px 8px;border-radius:10px;background:rgba(0,209,255,0.1);color:var(--blue);display:inline-block;margin-top:4px;}
-
-/* 支付弹窗 */
-.pay-modal {
-  position:fixed;
-  top:0;left:0;
-  width:100%;height:100%;
-  background:rgba(0,0,0,0.7);
-  display:none;
-  align-items:center;justify-content:center;
-  z-index:9999;
+.success{
+  background: rgba(0,255,136,0.1);
+  color: #00ff88;
 }
-.pay-box {
-  background:#12151d;
-  border-radius:20px;
-  padding:30px;
-  max-width:320px;
-  text-align:center;
+.error{
+  background: rgba(255,64,124,0.1);
+  color: #ff407c;
 }
-.pay-box h3 {margin-bottom:20px;}
-.pay-qr {width:200px;height:200px;margin:0 auto 16px;background:#222;border-radius:10px;}
-.pay-qr img {width:100%;height:100%;object-fit:contain;border-radius:10px;}
-.pay-amount {font-size:20px;color:var(--blue);font-weight:bold;margin-bottom:16px;}
-.pay-btn {margin-top:16px;}
 </style>
 </head>
-
 <body>
-<div id="particles"></div>
-<div id="splash">
-  <div class="splash-logo">🥕 Carrot</div>
-  <div class="loading-bar"><div class="loading-progress"></div></div>
-</div>
 
+<div id="particles"></div>
 <div class="nav">
   <div class="logo gradient-text">🥕 Carrot 科技辅助系统</div>
 </div>
 
 <div class="hero">
-  <h1 class="gradient-text">让生存更简单 · 让创造更自由</h1>
-  <p>轻量级 · 稳定 · 高效 · 安全</p>
-  <div class="buttons">
-    <button class="btn btn-gradient" id="downloadBtn">加载中...</button>
-  </div>
+  <h1 class="gradient-text">让生存更简单</h1>
+  <p>稳定 | 高效 | 安全 | 持续更新</p>
 </div>
 
 <div class="user-center">
-  <div class="user-tabs" id="user-tabs">
-    <div class="user-tab active" onclick="switchForm('login')">账号登录</div>
-    <div class="user-tab" onclick="switchForm('reg')">注册账号</div>
-  </div>
-  <div id="msg" class="msg"></div>
-
-  <div id="login-form" class="user-form active">
-    <input type="text" id="login-user" placeholder="请输入用户名">
-    <input type="password" id="login-pwd" placeholder="请输入密码">
-    <button class="submit-btn" onclick="userLogin()">立即登录</button>
+  <div class="user-tabs">
+    <div class="user-tab active" onclick="switchTab('login')">登录</div>
+    <div class="user-tab" onclick="switchTab('reg')">注册</div>
   </div>
 
-  <div id="reg-form" class="user-form">
-    <input type="text" id="reg-user" placeholder="用户名">
-    <input type="password" id="reg-pwd" placeholder="密码">
-    <input type="password" id="reg-pwd2" placeholder="确认密码">
-    <button class="submit-btn" onclick="userRegister()">立即注册</button>
+  <div class="user-form active" id="login-form">
+    <input id="login-user" placeholder="用户名">
+    <input id="login-pwd" type="password" placeholder="密码">
+    <button class="submit-btn" onclick="userLogin()">登录</button>
   </div>
 
-  <div id="user-page" class="user-logined">
+  <div class="user-form" id="reg-form">
+    <input id="reg-user" placeholder="用户名">
+    <input id="reg-pwd" type="password" placeholder="密码">
+    <input id="reg-pwd2" type="password" placeholder="确认密码">
+    <button class="submit-btn" onclick="userRegister()">注册</button>
+  </div>
+
+  <div class="user-page" id="user-page">
     <div class="user-card">
-      <div class="user-avatar">🥕</div>
-      <div class="user-name gradient-text" id="show-username">Carrot用户</div>
-      <div class="user-vip" id="vip-level">普通用户</div>
-      <div class="user-expire" id="vip-expire">会员到期：未开通</div>
+      <div class="gradient-text" id="show-name" style="font-size:20px"></div>
+      <div style="margin-top:8px;color:#aaa">用户中心</div>
     </div>
 
     <div class="user-btns">
-      <button class="btn btn-gradient" onclick="doDownload()">📥 立即下载</button>
-      <button class="btn btn-exit" onclick="logout()">🚪 退出登录</button>
+      <button class="btn" onclick="openBuyPanel()">开通会员</button>
+      <button class="btn btn-exit" onclick="logout()">退出登录</button>
     </div>
 
-    <div class="user-package">
-      <h3 class="gradient-text">我的套餐</h3>
-      <div class="package-item" id="pkg-name">当前套餐：无</div>
-      <div class="package-item">可用功能：基础功能</div>
-    </div>
-
-    <div class="user-notice">
-      <h3 class="gradient-text">官方公告</h3>
-      <div class="notice-item">📢 v1.2.0 版本已更新</div>
-      <div class="notice-item">📢 祝各位用户使用愉快</div>
-    </div>
-
-    <div class="user-links">
-      <div class="link-item" onclick="jumpToGroup()">
-        <div class="icon">🐧</div>官方群
+    <div class="price-cards">
+      <div class="price-card" onclick="openBuy('周卡',12)">
+        <h4>周卡</h4><div class="price">¥12</div>
       </div>
-      <div class="link-item" style="opacity:0.6;pointer-events:none;">
-        <div class="icon">🔗</div>代理<br><small>未开放</small>
+      <div class="price-card" onclick="openBuy('月卡',25)">
+        <h4>月卡</h4><div class="price">¥25</div>
+      </div>
+      <div class="price-card" onclick="openBuy('季卡',36)">
+        <h4>季卡</h4><div class="price">¥36</div>
+      </div>
+      <div class="price-card" onclick="openBuy('永久',65)">
+        <h4>永久</h4><div class="price">¥65</div>
       </div>
     </div>
 
-    <!-- 代理展示 -->
-    <div class="agent-section">
-      <h3 class="gradient-text" style="text-align:center;margin-bottom:16px;">官方代理</h3>
-      <div class="agent-list" id="agentList"></div>
-    </div>
-
-    <div class="collapse-box">
-      <div class="collapse-btn" onclick="toggleCollapse(this)">
-        <span>⚔️ Combat 战斗功能</span>
-        <span>▼</span>
-      </div>
-      <div class="collapse-body">
-        <div class="collapse-content">
-          <div class="feature-grid">
-            <div class="feature-item">无痕光环</div>
-            <div class="feature-item">激流</div>
-            <div class="feature-item">虚影屏障</div>
-            <div class="feature-item">刀刃暴击</div>
-            <div class="feature-item">环绕</div>
-            <div class="feature-item">自杀</div>
-            <div class="feature-item">自嘲</div>
-            <div class="feature-item">自动点击</div>
-            <div class="feature-item">碰撞箱</div>
-            <div class="feature-item">反击退</div>
-            <div class="feature-item">刀刃重锤</div>
-            <div class="feature-item">背后跟随</div>
-            <div class="feature-item">杀戮光环</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="collapse-box">
-      <div class="collapse-btn" onclick="toggleCollapse(this)">
-        <span>🏃 Movement 移动功能</span>
-        <span>▼</span>
-      </div>
-      <div class="collapse-body">
-        <div class="collapse-content">
-          <div class="feature-grid">
-            <div class="feature-item">快速停止</div>
-            <div class="feature-item">高跳</div>
-            <div class="feature-item">无减速</div>
-            <div class="feature-item">静空</div>
-            <div class="feature-item">平飞</div>
-            <div class="feature-item">自动突起</div>
-            <div class="feature-item">飞行</div>
-            <div class="feature-item">无下坠伤害</div>
-            <div class="feature-item">反蜘蛛网</div>
-            <div class="feature-item">跟随玩家</div>
-            <div class="feature-item">背包移动</div>
-            <div class="feature-item">虚空回弹</div>
-            <div class="feature-item">空气游泳</div>
-            <div class="feature-item">玩家速度</div>
-            <div class="feature-item">远跳</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="collapse-box">
-      <div class="collapse-btn" onclick="toggleCollapse(this)">
-        <span>👤 Player 玩家功能</span>
-        <span>▼</span>
-      </div>
-      <div class="collapse-body">
-        <div class="collapse-content">
-          <div class="feature-grid">
-            <div class="feature-item">范围破坏</div>
-            <div class="feature-item">点击传送</div>
-            <div class="feature-item">世界速度</div>
-            <div class="feature-item">搭路</div>
-            <div class="feature-item">反踢出</div>
-            <div class="feature-item">自动破坏</div>
-            <div class="feature-item">崩溃服务器</div>
-            <div class="feature-item">点击破坏</div>
-            <div class="feature-item">飞船</div>
-            <div class="feature-item">箱子小偷</div>
-            <div class="feature-item">箱子光环</div>
-            <div class="feature-item">反侵入</div>
-            <div class="feature-item">方块距离</div>
-            <div class="feature-item">背包整理</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="collapse-box">
-      <div class="collapse-btn" onclick="toggleCollapse(this)">
-        <span>📦 Misc 杂项功能</span>
-        <span>▼</span>
-      </div>
-      <div class="collapse-body">
-        <div class="collapse-content">
-          <div class="feature-grid">
-            <div class="feature-item">自动发言</div>
-            <div class="feature-item">玩家踢出</div>
-            <div class="feature-item">停止发包</div>
-            <div class="feature-item">无敌模式</div>
-            <div class="feature-item">远程商店</div>
-            <div class="feature-item">智能队友</div>
-            <div class="feature-item">生成坐骑</div>
-            <div class="feature-item">崩溃器</div>
-            <div class="feature-item">重复发包</div>
-            <div class="feature-item">自由摄像机</div>
-            <div class="feature-item">延迟发包</div>
-            <div class="feature-item">快速进货</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="collapse-box">
-      <div class="collapse-btn" onclick="toggleCollapse(this)">
-        <span>🎨 Visual 视觉功能</span>
-        <span>▼</span>
-      </div>
-      <div class="collapse-body">
-        <div class="collapse-content">
-          <div class="feature-grid">
-            <div class="feature-item">绘制选中</div>
-            <div class="feature-item">粒子光环</div>
-            <div class="feature-item">数组列表</div>
-            <div class="feature-item">摄像机</div>
-            <div class="feature-item">色彩校正</div>
-            <div class="feature-item">绘制范围</div>
-            <div class="feature-item">夜视</div>
-            <div class="feature-item">手部动画</div>
-            <div class="feature-item">强制显示坐标</div>
-            <div class="feature-item">实体连线</div>
-            <div class="feature-item">缓慢挥手</div>
-            <div class="feature-item">放大镜</div>
-            <div class="feature-item">平滑挥手</div>
-            <div class="feature-item">天气颜色</div>
-            <div class="feature-item">箱子绘制</div>
-            <div class="feature-item">神奇牛光环</div>
-            <div class="feature-item">大陀螺</div>
-            <div class="feature-item">绘制光环</div>
-            <div class="feature-item">水印</div>
-            <div class="feature-item">实体绘制</div>
-            <div class="feature-item">中文模式</div>
-            <div class="feature-item">雾</div>
-            <div class="feature-item">世界光</div>
-            <div class="feature-item">攻击效果</div>
-            <div class="feature-item">速度提示</div>
-            <div class="feature-item">绘制路线</div>
-            <div class="feature-item">视觉秒杀</div>
-            <div class="feature-item">移动光环</div>
-            <div class="feature-item">矿透</div>
-            <div class="feature-item">景深</div>
-            <div class="feature-item">无抖动</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div style="margin-top:26px">
-      <h3 class="gradient-text" style="margin-bottom:14px;text-align:center">会员套餐</h3>
-      <div class="price-cards">
-        <div class="price-card" onclick="openPay('周卡',12)">
-          <h4>周卡</h4>
-          <div class="price">¥12</div>
-        </div>
-        <div class="price-card" onclick="openPay('月卡',25)">
-          <h4>月卡</h4>
-          <div class="price">¥25</div>
-        </div>
-        <div class="price-card" onclick="openPay('季卡',36)">
-          <h4>季卡</h4>
-          <div class="price">¥36</div>
-        </div>
-        <div class="price-card" onclick="openPay('永久',65)">
-          <h4>永久</h4>
-          <div class="price">¥65</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="disclaimer">
-      ⚠️ 本工具仅用于单人/私服测试，禁止用于官方服务器，违规后果自负。
-    </div>
+    <div class="agent-list" id="agentList"></div>
   </div>
 </div>
 
-<!-- 支付弹窗 -->
-<div class="pay-modal" id="payModal">
-  <div class="pay-box">
-    <h3 class="gradient-text">支付确认</h3>
-    <div class="pay-qr">
-      <img id="payQrImg" src="" alt="收款码">
-    </div>
-    <div class="pay-amount" id="payAmount">¥12</div>
-    <p style="color:var(--light-text);font-size:12px;margin-bottom:16px;">完成支付后点击下方按钮领取卡密</p>
-    <button class="btn btn-gradient pay-btn" onclick="getCard()">我已完成支付</button>
-    <button class="btn btn-exit pay-btn" onclick="closePay()">取消</button>
+<!-- 购买弹窗 -->
+<div class="modal" id="buyModal">
+  <div class="modal-box">
+    <h3 class="gradient-text">提交订单</h3>
+    <img id="payQrShow" style="display:none;">
+    <p>套餐：<span id="showType"></span></p>
+    <p>金额：<span id="showPrice" style="color:var(--blue);font-weight:bold;"></span> 元</p>
+    <input type="text" id="order_user" placeholder="输入用户名核对">
+    <input type="text" id="order_trail" placeholder="支付尾号（如 88）">
+    <label class="upload-area" onclick="document.getElementById('screenshot').click()">
+      <p>点击上传支付成功截图</p>
+    </label>
+    <input type="file" id="screenshot" accept="image/*">
+    <button class="btn" onclick="submitOrder()">提交订单（等待审核）</button>
+    <button class="btn btn-exit" onclick="closeModal()">取消</button>
   </div>
 </div>
-
-<div class="footer">© 2026 Carrot · All Rights Reserved</div>
 
 <script>
-function createParticles() {
+let currentType = '';
+let currentPrice = 0;
+let screenShot = '';
+let loginUser = '';
+
+function createParticles(){
   const p = document.getElementById('particles');
-  for(let i=0;i<60;i++){
-    let dot = document.createElement('div');
-    dot.style.cssText = `
+  for(let i=0;i<50;i++){
+    let d = document.createElement('div');
+    d.style.cssText = `
       position:absolute;
       width:${Math.random()*3+1}px;
       height:${Math.random()*3+1}px;
@@ -496,137 +353,134 @@ function createParticles() {
       border-radius:50%;
       top:${Math.random()*100}%;
       left:${Math.random()*100}%;
-      opacity:${Math.random()*0.6+0.2};
-      box-shadow:0 0 6px #00d1ff;
-      animation:float ${Math.random()*6+4}s linear infinite;
+      opacity:0.4;
     `;
-    p.appendChild(dot);
+    p.appendChild(d);
   }
-  let s = document.createElement('style');
-  s.innerHTML = '@keyframes float{0%{transform:translate(0,0);}50%{transform:translate(10px,10px);}100%{transform:translate(0,0);}}';
-  document.head.appendChild(s);
 }
 
-var currentUser = null;
-var apkInfo = null;
-var currentPayType = '';
-var currentPayAmount = 0;
-
-function toggleCollapse(el) {
-  el.classList.toggle("active");
-  var body = el.nextElementSibling;
-  body.style.maxHeight = body.style.maxHeight ? null : body.scrollHeight + 100 + "px";
-}
-
-function switchForm(type) {
-  document.querySelectorAll('.user-tab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.user-form').forEach(f=>f.classList.remove('active'));
+function switchTab(t){
+  document.querySelectorAll('.user-tab').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.user-form').forEach(e=>e.classList.remove('active'));
   event.target.classList.add('active');
-  document.getElementById(type+'-form').classList.add('active');
-  document.getElementById('msg').style.display='none';
+  document.getElementById(t+'-form').classList.add('active');
 }
 
-function userRegister() {
-  const user = document.getElementById('reg-user').value.trim();
-  const pwd = document.getElementById('reg-pwd').value.trim();
-  const pwd2 = document.getElementById('reg-pwd2').value.trim();
-  if(!user||!pwd||!pwd2){showMsg('请填写完整信息','error');return;}
-  if(pwd!==pwd2){showMsg('两次密码不一致','error');return;}
-  let userList = JSON.parse(localStorage.getItem('carrotUsers')||'[]');
-  if(userList.some(i=>i.username===user)){showMsg('账号已存在','error');return;}
-  userList.push({username:user,password:pwd});
-  localStorage.setItem('carrotUsers',JSON.stringify(userList));
-  showMsg('注册成功！请登录','success');
+function userRegister(){
+  const u = document.getElementById('reg-user').value.trim();
+  const p = document.getElementById('reg-pwd').value.trim();
+  const p2 = document.getElementById('reg-pwd2').value.trim();
+  if(!u||!p||p!==p2){alert('信息不正确');return;}
+  const users = JSON.parse(localStorage.getItem('carrotUsers')||'[]');
+  if(users.some(x=>x.user===u)){alert('用户名已存在');return;}
+  users.push({user,pwd:p});
+  localStorage.setItem('carrotUsers',JSON.stringify(users));
+  alert('注册成功，请登录');
+  switchTab('login');
 }
 
-function userLogin() {
-  const user = document.getElementById('login-user').value.trim();
-  const pwd = document.getElementById('login-pwd').value.trim();
-  if(!user||!pwd){showMsg('请输入账号密码','error');return;}
-  let userList = JSON.parse(localStorage.getItem('carrotUsers')||'[]');
-  let target = userList.find(i=>i.username===user && i.password===pwd);
-  if(!target){showMsg('账号或密码错误','error');return;}
-  localStorage.setItem('autoLogin',JSON.stringify({user,pwd}));
-  currentUser=user;
-  document.getElementById('show-username').innerText=user;
-  document.getElementById('user-tabs').style.display='none';
-  document.getElementById('login-form').style.display='none';
-  document.getElementById('reg-form').style.display='none';
-  document.getElementById('msg').style.display='none';
+function userLogin(){
+  const u = document.getElementById('login-user').value.trim();
+  const p = document.getElementById('login-pwd').value.trim();
+  const users = JSON.parse(localStorage.getItem('carrotUsers')||'[]');
+  const find = users.find(x=>x.user===u&&x.pwd===p);
+  if(!find){alert('账号或密码错误');return;}
+  loginUser = u;
+  localStorage.setItem('loginUser',u);
+  showUserPage();
+}
+
+function showUserPage(){
+  document.getElementById('login-form').classList.remove('active');
+  document.getElementById('reg-form').classList.remove('active');
+  document.querySelector('.user-tabs').style.display='none';
   document.getElementById('user-page').style.display='block';
+  document.getElementById('show-name').innerText = loginUser;
 }
 
-function logout(){localStorage.removeItem('autoLogin');location.reload();}
-
-function jumpToGroup(){
-  window.open("mqqapi://card/show_pslcard?src_type=internal&version=1&uin=1003106744&card_type=group&source=qrcode", "_blank");
+function logout(){
+  localStorage.removeItem('loginUser');
+  location.reload();
 }
 
-function showMsg(text,type){
-  const m=document.getElementById('msg');
-  m.innerText=text;
-  m.className='msg msg-'+type;
-  m.style.display='block';
+function openBuy(type,price){
+  if(!loginUser){alert('请先登录');return;}
+  currentType = type;
+  currentPrice = price;
+  document.getElementById('showType').innerText = type;
+  document.getElementById('showPrice').innerText = price;
+  document.getElementById('order_user').value = loginUser;
+  const qr = localStorage.getItem('payQr');
+  if(qr){
+    document.getElementById('payQrShow').src = qr;
+    document.getElementById('payQrShow').style.display = 'block';
+  }
+  document.getElementById('buyModal').style.display = 'flex';
 }
 
-function doDownload(){if(!apkInfo){showMsg("暂无下载","error");return;}window.open(apkInfo.url,'_blank');}
+function closeModal(){
+  document.getElementById('buyModal').style.display = 'none';
+}
 
-// 加载代理
+document.getElementById('screenshot').addEventListener('change',function(e){
+  const f = e.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = ev => {
+    screenShot = ev.target.result;
+  };
+  r.readAsDataURL(f);
+});
+
+function submitOrder(){
+  const u = document.getElementById('order_user').value.trim();
+  const t = document.getElementById('order_trail').value.trim();
+  if(!u||!t||!screenShot||!currentType){
+    alert('请完成所有信息');
+    return;
+  }
+  const orders = JSON.parse(localStorage.getItem('orders')||'[]');
+  orders.push({
+    id: Date.now(),
+    user: u,
+    type: currentType,
+    price: currentPrice,
+    trail: t,
+    ss: screenShot,
+    status: 'pending'
+  });
+  localStorage.setItem('orders',JSON.stringify(orders));
+  alert('订单提交成功！管理员审核后自动发卡。');
+  closeModal();
+}
+
 function loadAgents(){
   const list = JSON.parse(localStorage.getItem('agentList')||'[]');
   const box = document.getElementById('agentList');
   box.innerHTML = '';
-  list.forEach(agent => {
+  list.forEach(a=>{
     const item = document.createElement('div');
     item.className = 'agent-item';
     item.innerHTML = `
-      <img class="agent-avatar" src="https://q1.qlogo.cn/g?b=qq&nk=${agent.qq}&s=640" alt="头像">
-      <div class="agent-info">
-        <div class="agent-name">${agent.name}</div>
-        <div class="agent-qq">QQ: ${agent.qq}</div>
-        <div class="agent-level">${agent.level}</div>
+      <img class="agent-avatar" src="https://q1.qlogo.cn/g?b=qq&nk=${a.qq}&s=640">
+      <div>
+        <div>${a.name}</div>
+        <div style="font-size:12px;color:#aaa">${a.level}</div>
       </div>
     `;
     box.appendChild(item);
   });
 }
 
-// 支付相关
-function openPay(type, amount) {
-  currentPayType = type;
-  currentPayAmount = amount;
-  const qr = localStorage.getItem('payQr') || '';
-  document.getElementById('payQrImg').src = qr;
-  document.getElementById('payAmount').innerText = `¥${amount}`;
-  document.getElementById('payModal').style.display = 'flex';
-}
-
-function closePay() {
-  document.getElementById('payModal').style.display = 'none';
-}
-
-function getCard() {
-  const cards = JSON.parse(localStorage.getItem(`card_${currentPayType}`)||'[]');
-  if(cards.length === 0) {
-    alert('该套餐暂无可用卡密，请联系客服');
-    return;
-  }
-  const card = cards.shift();
-  localStorage.setItem(`card_${currentPayType}`, JSON.stringify(cards));
-  alert(`您的${currentPayType}卡密：\n${card}\n\n请妥善保管，使用后失效`);
-  closePay();
-}
-
-document.addEventListener("DOMContentLoaded",function(){
+window.onload = function(){
   createParticles();
-  setTimeout(()=>{document.getElementById('splash').classList.add('hidden');},1600);
-  const btn=document.getElementById('downloadBtn');
-  const data=localStorage.getItem('apkDownload');
-  if(data){apkInfo=JSON.parse(data);btn.innerText=`📥 下载 ${apkInfo.name}`;}else{btn.innerText="暂无下载";btn.disabled=true;}
-  const auto=localStorage.getItem('autoLogin');
-  if(auto){const {user,pwd}=JSON.parse(auto);document.getElementById('login-user').value=user;document.getElementById('login-pwd').value=pwd;userLogin();}
   loadAgents();
-});
+  const lu = localStorage.getItem('loginUser');
+  if(lu){
+    loginUser = lu;
+    showUserPage();
+  }
+};
 </script>
 </body>
 </html>
