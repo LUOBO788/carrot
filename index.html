@@ -75,6 +75,18 @@ body {
 .hero p{
   color: var(--light-text);
 }
+#notice-box{
+  max-width: 420px;
+  margin: 20px auto;
+  padding: 14px 20px;
+  background: rgba(0,209,255,0.08);
+  border: 1px solid rgba(0,209,255,0.2);
+  border-radius: 14px;
+  text-align: center;
+  color: #00d1ff;
+  font-weight: 500;
+  display: none;
+}
 .user-center{
   max-width: 420px;
   margin: 0 auto;
@@ -268,6 +280,10 @@ input{
   <p>稳定 | 高效 | 安全 | 持续更新</p>
 </div>
 
+<div id="notice-box">
+  📢 公告：<span id="notice-text"></span>
+</div>
+
 <div class="user-center">
   <div class="user-tabs">
     <div class="user-tab active" onclick="switchTab('login')">登录</div>
@@ -317,7 +333,6 @@ input{
   </div>
 </div>
 
-<!-- 购买弹窗 -->
 <div class="modal" id="buyModal">
   <div class="modal-box">
     <h3 class="gradient-text">提交订单</h3>
@@ -475,6 +490,13 @@ function loadAgents(){
 window.onload = function(){
   createParticles();
   loadAgents();
+
+  const notice = localStorage.getItem('siteNotice');
+  if(notice && notice.trim()){
+    document.getElementById('notice-text').innerText = notice;
+    document.getElementById('notice-box').style.display = 'block';
+  }
+
   const lu = localStorage.getItem('loginUser');
   if(lu){
     loginUser = lu;
