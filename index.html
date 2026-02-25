@@ -22,7 +22,6 @@
   --glow: 0 0 12px rgba(0,209,255,0.4);
 }
 
-/* 粒子背景 */
 #particles {
   position: fixed;
   top: 0;
@@ -42,7 +41,6 @@ body {
   overflow-x: hidden;
 }
 
-/* 启动动画 */
 #splash {
   position: fixed;
   top: 0;
@@ -158,7 +156,6 @@ body {
 .link-item {flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:16px 8px;text-align:center;font-size:12px;}
 .link-item .icon {font-size:22px;margin-bottom:6px;color:var(--blue);}
 
-/* 折叠面板 */
 .collapse-box {margin-bottom:10px;}
 .collapse-btn {width:100%;background:rgba(22,25,34,0.7);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:16px 20px;text-align:left;color:var(--text);font-size:15px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:0.3s;}
 .collapse-btn.active {border-color:var(--blue);background:rgba(22,25,34,0.9);}
@@ -180,15 +177,21 @@ body {
 
 .disclaimer {background:rgba(20,23,32,0.4);border-left:3px solid var(--blue);border-radius:12px;padding:16px;font-size:12px;color:var(--light-text);margin:20px 0;}
 .footer {padding:30px 20px;text-align:center;color:#668;font-size:13px;}
+
+/* 代理样式 */
+.agent-section {margin:30px 0;}
+.agent-list {display:flex;flex-direction:column;gap:12px;}
+.agent-item {background:rgba(20,23,32,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;}
+.agent-avatar {width:50px;height:50px;border-radius:50%;object-fit:cover;background:#111;}
+.agent-info {flex:1;}
+.agent-name {font-size:16px;font-weight:bold;color:var(--text);}
+.agent-qq {font-size:12px;color:var(--light-text);}
+.agent-level {font-size:12px;padding:2px 8px;border-radius:10px;background:rgba(0,209,255,0.1);color:var(--blue);display:inline-block;margin-top:4px;}
 </style>
 </head>
 
 <body>
-
-<!-- 粒子背景 -->
 <div id="particles"></div>
-
-<!-- 启动动画 -->
 <div id="splash">
   <div class="splash-logo">🥕 Carrot</div>
   <div class="loading-bar"><div class="loading-progress"></div></div>
@@ -251,7 +254,6 @@ body {
       <div class="notice-item">📢 祝各位用户使用愉快</div>
     </div>
 
-    <!-- 快捷按钮：加群 + 代理 -->
     <div class="user-links">
       <div class="link-item" onclick="jumpToGroup()">
         <div class="icon">🐧</div>官方群
@@ -259,6 +261,12 @@ body {
       <div class="link-item" style="opacity:0.6;pointer-events:none;">
         <div class="icon">🔗</div>代理<br><small>未开放</small>
       </div>
+    </div>
+
+    <!-- 代理展示 -->
+    <div class="agent-section">
+      <h3 class="gradient-text" style="text-align:center;margin-bottom:16px;">官方代理</h3>
+      <div class="agent-list" id="agentList"></div>
     </div>
 
     <div class="collapse-box">
@@ -426,7 +434,6 @@ body {
 <div class="footer">© 2026 Carrot · All Rights Reserved</div>
 
 <script>
-// 粒子背景简易版
 function createParticles() {
   const p = document.getElementById('particles');
   for(let i=0;i<60;i++){
@@ -446,7 +453,7 @@ function createParticles() {
     p.appendChild(dot);
   }
   let s = document.createElement('style');
-  s.innerHTML = '@keyframes float{0%{transform:translate(0,0);}50%{transform:translate(10px,10px);}100%{transform:translate(0,0);}}';
+  s.innerHTML = '@keyframes float{0%{transform:translateY(0,0);}50%{transform:translateY(10px,10px);}100%{transform:translateY(0,0);}}';
   document.head.appendChild(s);
 }
 
@@ -480,7 +487,6 @@ function userRegister() {
   showMsg('注册成功！请登录','success');
 }
 
-// 修复登录
 function userLogin() {
   const user = document.getElementById('login-user').value.trim();
   const pwd = document.getElementById('login-pwd').value.trim();
@@ -500,7 +506,6 @@ function userLogin() {
 
 function logout(){localStorage.removeItem('autoLogin');location.reload();}
 
-// 修复加群：直接唤起手机QQ
 function jumpToGroup(){
   window.open("mqqapi://card/show_pslcard?src_type=internal&version=1&uin=1003106744&card_type=group&source=qrcode", "_blank");
 }
@@ -511,7 +516,28 @@ function showMsg(text,type){
   m.className='msg msg-'+type;
   m.style.display='block';
 }
+
 function doDownload(){if(!apkInfo){showMsg("暂无下载","error");return;}window.open(apkInfo.url,'_blank');}
+
+// 加载代理
+function loadAgents(){
+  const list = JSON.parse(localStorage.getItem('agentList')||'[]');
+  const box = document.getElementById('agentList');
+  box.innerHTML = '';
+  list.forEach(agent => {
+    const item = document.createElement('div');
+    item.className = 'agent-item';
+    item.innerHTML = `
+      <img class="agent-avatar" src="https://q1.qlogo.cn/g?b=qq&nk=${agent.qq}&s=640" alt="头像">
+      <div class="agent-info">
+        <div class="agent-name">${agent.name}</div>
+        <div class="agent-qq">QQ: ${agent.qq}</div>
+        <div class="agent-level">${agent.level}</div>
+      </div>
+    `;
+    box.appendChild(item);
+  });
+}
 
 document.addEventListener("DOMContentLoaded",function(){
   createParticles();
@@ -521,6 +547,7 @@ document.addEventListener("DOMContentLoaded",function(){
   if(data){apkInfo=JSON.parse(data);btn.innerText=`📥 下载 ${apkInfo.name}`;}else{btn.innerText="暂无下载";btn.disabled=true;}
   const auto=localStorage.getItem('autoLogin');
   if(auto){const {user,pwd}=JSON.parse(auto);document.getElementById('login-user').value=user;document.getElementById('login-pwd').value=pwd;userLogin();}
+  loadAgents();
 });
 </script>
 </body>
