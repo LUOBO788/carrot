@@ -235,18 +235,13 @@ body {
       <button class="save-btn" onclick="saveNotice()">保存公告</button>
     </div>
 
-    <!-- APK 上传模块 已集成 -->
     <div class="card">
-      <h3 class="gradient-text">📦 APK文件管理（主站下载）</h3>
-      <div style="margin-bottom:12px;">
-        <label for="apkFile" style="display:block;margin-bottom:6px;">选择APK文件：</label>
-        <input type="file" id="apkFile" accept=".apk" style="width:100%;padding:10px;background:#181818;border:1px solid var(--border);border-radius:8px;color:var(--text);">
-      </div>
-      <button class="save-btn" onclick="uploadApk()">上传并同步到主站</button>
-      <div id="uploadStatus" class="msg" style="margin-top:10px;"></div>
-      <div id="currentApkInfo" style="margin-top:15px;padding:12px;background:#181818;border-radius:8px;border:1px solid var(--border);">
-        当前已上传：暂无文件
-      </div>
+      <h3 class="gradient-text">📦 APK 下载设置（秒上传不卡顿）</h3>
+      <input type="text" id="apkUrl" placeholder="输入 APK 下载链接" style="width:100%;padding:12px;background:#181818;border:1px solid #223;border-radius:8px;color:#fff;margin-bottom:10px;">
+      <input type="text" id="apkName" placeholder="输入版本名 如 v1.2.0" style="width:100%;padding:12px;background:#181818;border:1px solid #223;border-radius:8px;color:#fff;margin-bottom:10px;">
+      <button class="save-btn" onclick="saveApk()">保存并同步到主站</button>
+      <div id="apkStatus" class="msg"></div>
+      <div id="currentApk" style="margin-top:12px;padding:10px;background:#181818;border-radius:6px;"></div>
     </div>
 
     <div class="card">
@@ -284,7 +279,7 @@ function showAdmin() {
   document.getElementById('logoutBtn').style.display = "block";
   loadUserList();
   loadNotice();
-  loadApkInfo();
+  showCurrentApk();
 }
 
 function adminLogout() {
@@ -314,57 +309,34 @@ function saveNotice() {
   alert("✅ 公告已同步到主站！");
 }
 
-// ↓↓↓ 上传APK ↓↓↓
-async function uploadApk() {
-  const fileInput = document.getElementById('apkFile');
-  const file = fileInput.files[0];
-  const statusEl = document.getElementById('uploadStatus');
-  const infoEl = document.getElementById('currentApkInfo');
-
-  if (!file) {
-    statusEl.innerHTML = '❌ 请先选择APK文件';
-    statusEl.className = 'msg msg-error';
-    statusEl.style.display = 'block';
+function saveApk() {
+  const url = document.getElementById('apkUrl').value.trim();
+  const name = document.getElementById('apkName').value.trim();
+  if(!url || !name) {
+    const s = document.getElementById('apkStatus');
+    s.innerText = "❌ 请填写完整";
+    s.className = "msg msg-error";
+    s.style.display = "block";
     return;
   }
-  if (!file.name.toLowerCase().endsWith('.apk')) {
-    statusEl.innerHTML = '❌ 仅支持APK文件';
-    statusEl.className = 'msg msg-error';
-    statusEl.style.display = 'block';
-    return;
-  }
-
-  statusEl.innerHTML = '⏳ 上传中...';
-  statusEl.className = 'msg msg-success';
-  statusEl.style.display = 'block';
-
-  const reader = new FileReader();
-  reader.onload = e => {
-    const apkInfo = {
-      name: file.name,
-      size: file.size,
-      uploadTime: new Date().toLocaleString(),
-      data: e.target.result
-    };
-    localStorage.setItem('latestApk', JSON.stringify(apkInfo));
-    statusEl.innerHTML = '✅ 上传成功！已同步主站下载';
-    infoEl.innerHTML = `当前：${file.name}（${(file.size/1024/1024).toFixed(2)}MB）`;
-  };
-  reader.readAsDataURL(file);
+  localStorage.setItem('apkDownload', JSON.stringify({url,name}));
+  const s = document.getElementById('apkStatus');
+  s.innerText = "✅ 已同步主站下载！";
+  s.className = "msg msg-success";
+  s.style.display = "block";
+  showCurrentApk();
 }
 
-function loadApkInfo() {
-  const infoEl = document.getElementById('currentApkInfo');
-  const apk = JSON.parse(localStorage.getItem('latestApk') || 'null');
-  if (apk) {
-    infoEl.innerHTML = `当前：${apk.name}（${(apk.size/1024/1024).toFixed(2)}MB）`;
-  }
+function showCurrentApk() {
+  const d = document.getElementById('currentApk');
+  const a = localStorage.getItem('apkDownload');
+  if(!a) { d.innerText = "当前未设置下载"; return; }
+  const j = JSON.parse(a);
+  d.innerText = `版本：${j.name} ｜ 已同步`;
 }
 
 window.onload = function() {
-  if(localStorage.getItem('adminLogin') === 'true') {
-    showAdmin();
-  }
+  if(localStorage.getItem('adminLogin') === 'true') showAdmin();
 }
 </script>
 </body>
