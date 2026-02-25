@@ -13,9 +13,9 @@
 body{background:#050507;color:var(--text);font-family:Segoe UI,Microsoft YaHei,sans-serif;}
 .nav{
   position:fixed;top:0;left:0;width:100%;
-  background:#111;padding:16px;
-  display:flex;justify-content:space-between;align-items:center;
-  z-index:99;
+  background:rgba(10,12,18,0.9);backdrop-filter:blur(12px);
+  padding:16px;display:flex;justify-content:space-between;align-items:center;z-index:99;
+  border-bottom:1px solid rgba(255,255,255,0.05);
 }
 .logo{
   background:linear-gradient(90deg,#00d1ff,#9d00ff,#ff00d1);
@@ -57,33 +57,42 @@ input,textarea,select{
 .order-tabs{
   display:flex;gap:8px;margin-bottom:12px;
 }
+.current-apk{
+  background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;
+  margin-top:10px;font-size:13px;color:var(--light-text);
+}
+.msg{padding:10px;border-radius:10px;margin:10px 0;text-align:center;display:none;}
+.msg-success{background:rgba(0,255,136,0.08);color:#00ff88;}
 </style>
 </head>
 <body>
 
 <div class="nav">
-  <div class="logo">Carrot 管理后台</div>
+  <div class="logo">🥕 Carrot 管理后台</div>
   <button class="btn" onclick="logout()">退出登录</button>
 </div>
 
 <div class="container" id="admin" style="display:none;">
 
+  <!-- 公告设置 -->
   <div class="card">
-    <h3>网站公告</h3>
+    <h3 class="gradient-text">网站公告</h3>
     <textarea id="noticeContent" rows="3" placeholder="输入公告内容，用户首页会显示"></textarea>
     <button class="btn" onclick="saveNotice()">保存公告</button>
   </div>
 
+  <!-- 收款码设置 -->
   <div class="card">
-    <h3>收款码设置</h3>
+    <h3 class="gradient-text">收款码设置</h3>
     <div class="upload" onclick="document.getElementById('qr').click()">点击上传收款码</div>
     <input type="file" id="qr" accept="image/*" style="display:none;">
     <img id="qrPrev">
     <button class="btn" onclick="saveQr()">保存收款码</button>
   </div>
 
+  <!-- 卡密管理 -->
   <div class="card">
-    <h3>卡密管理</h3>
+    <h3 class="gradient-text">卡密管理</h3>
     <select id="ctype">
       <option value="周卡">周卡</option>
       <option value="月卡">月卡</option>
@@ -95,8 +104,9 @@ input,textarea,select{
     <div id="cardCount" style="margin-top:8px;"></div>
   </div>
 
+  <!-- 代理管理 -->
   <div class="card">
-    <h3>代理管理</h3>
+    <h3 class="gradient-text">代理管理</h3>
     <input id="an" placeholder="代理名称">
     <input id="aq" placeholder="QQ号">
     <select id="al">
@@ -107,8 +117,19 @@ input,textarea,select{
     <div id="agentList" style="margin-top:14px;"></div>
   </div>
 
+  <!-- APK下载设置 -->
   <div class="card">
-    <h3>订单管理</h3>
+    <h3 class="gradient-text">APK 下载设置</h3>
+    <input type="text" id="apkUrl" placeholder="APK 下载链接">
+    <input type="text" id="apkName" placeholder="版本名（如 v1.2.0）">
+    <button class="btn" onclick="saveApk()">保存并同步到主站</button>
+    <div id="apkMsg" class="msg"></div>
+    <div id="currentApk" class="current-apk"></div>
+  </div>
+
+  <!-- 订单管理 -->
+  <div class="card">
+    <h3 class="gradient-text">订单管理</h3>
     <div class="order-tabs">
       <button class="btn btn-tab active" onclick="loadOrderTab('pending')">待审核</button>
       <button class="btn btn-tab" onclick="loadOrderTab('success')">已完成</button>
@@ -118,9 +139,10 @@ input,textarea,select{
   </div>
 </div>
 
+<!-- 登录 -->
 <div class="container" id="login">
   <div class="card">
-    <h3>管理员登录</h3>
+    <h3 class="gradient-text">管理员登录</h3>
     <input id="user" placeholder="账号">
     <input id="pwd" type="password" placeholder="密码">
     <button class="btn" onclick="login()">登录</button>
@@ -132,15 +154,14 @@ const ADMIN_USER = "LUOBO";
 const ADMIN_PWD = "tianniWZ1030LJH";
 let currentOrderTab = 'pending';
 
+// 登录
 function login(){
   const u = document.getElementById('user').value;
   const p = document.getElementById('pwd').value;
   if(u === ADMIN_USER && p === ADMIN_PWD){
     localStorage.setItem('admin','ok');
     location.reload();
-  }else{
-    alert('账号或密码错误');
-  }
+  }else{alert('账号或密码错误');}
 }
 
 function logout(){
@@ -148,16 +169,17 @@ function logout(){
   location.reload();
 }
 
+// 公告
 function saveNotice(){
   const c = document.getElementById('noticeContent').value.trim();
   localStorage.setItem('siteNotice',c);
-  alert('公告保存成功');
+  alert('✅ 公告保存成功');
 }
 
+// 收款码
 let tmpQr = '';
 document.getElementById('qr').addEventListener('change',e=>{
-  const f = e.target.files[0];
-  if(!f) return;
+  const f = e.target.files[0];if(!f) return;
   const r = new FileReader();
   r.onload = ev=>{
     tmpQr = ev.target.result;
@@ -167,26 +189,28 @@ document.getElementById('qr').addEventListener('change',e=>{
   r.readAsDataURL(f);
 });
 function saveQr(){
-  if(!tmpQr){alert('请上传');return;}
+  if(!tmpQr){alert('请上传收款码');return;}
   localStorage.setItem('payQr',tmpQr);
-  alert('保存成功');
+  alert('✅ 收款码保存成功');
 }
 
+// 卡密
 function addCards(){
   const t = document.getElementById('ctype').value;
   const cs = document.getElementById('cards').value.trim().split('\n').filter(x=>x);
   const old = JSON.parse(localStorage.getItem('card_'+t)||'[]');
   localStorage.setItem('card_'+t,JSON.stringify([...old,...cs]));
-  alert('添加成功');
+  alert('✅ 卡密添加成功');
   document.getElementById('cards').value = '';
   loadCardCount();
 }
 function loadCardCount(){
   const t = document.getElementById('ctype').value;
   const c = JSON.parse(localStorage.getItem('card_'+t)||'[]').length;
-  document.getElementById('cardCount').innerText = `库存：${c} 个`;
+  document.getElementById('cardCount').innerText = `📦 ${type} 库存：${c} 个`;
 }
 
+// 代理
 function addAgent(){
   const n = document.getElementById('an').value.trim();
   const q = document.getElementById('aq').value.trim();
@@ -195,12 +219,11 @@ function addAgent(){
   const a = JSON.parse(localStorage.getItem('agentList')||'[]');
   a.push({name:n,qq:q,level:l});
   localStorage.setItem('agentList',JSON.stringify(a));
-  document.getElementById('an').value = '';
-  document.getElementById('aq').value = '';
+  document.getElementById('an').value='';document.getElementById('aq').value='';
   loadAgents();
 }
 function deleteAgent(i){
-  if(!confirm('确定删除？')) return;
+  if(!confirm('确定删除该代理？')) return;
   const a = JSON.parse(localStorage.getItem('agentList')||'[]');
   a.splice(i,1);
   localStorage.setItem('agentList',JSON.stringify(a));
@@ -213,12 +236,36 @@ function loadAgents(){
   a.forEach((it,i)=>{
     const d = document.createElement('div');
     d.className = 'agent-item';
-    d.innerText = `${i+1}. ${it.name} | QQ:${it.qq} | ${it.level}  [点击删除]`;
+    d.innerText = `${i+1}. ${it.name} | QQ:${it.qq} | ${it.level} [点击删除]`;
     d.onclick = ()=>deleteAgent(i);
     b.appendChild(d);
   });
 }
 
+// APK下载设置
+function saveApk(){
+  const u = document.getElementById('apkUrl').value.trim();
+  const n = document.getElementById('apkName').value.trim();
+  if(!u||!n){alert('请填写完整');return;}
+  localStorage.setItem('apkDownload',JSON.stringify({url:u,name:n}));
+  
+  const m = document.getElementById('apkMsg');
+  m.innerText = '✅ 已同步到主站下载按钮';
+  m.className = 'msg msg-success';
+  m.style.display = 'block';
+  setTimeout(()=>m.style.display='none',2000);
+  
+  showCurrentApk();
+}
+function showCurrentApk(){
+  const apk = localStorage.getItem('apkDownload');
+  if(apk){
+    const d = JSON.parse(apk);
+    document.getElementById('currentApk').innerText = `当前版本：${d.name} | 下载链接：${d.url}`;
+  }
+}
+
+// 订单
 function loadOrderTab(type){
   currentOrderTab = type;
   document.querySelectorAll('.btn-tab').forEach(t=>t.classList.remove('active'));
@@ -240,9 +287,9 @@ function loadOrders(){
         <button class="btn btn-danger" onclick="reject(${o.id})">拒绝</button>
       `;
     } else if(o.status === 'success'){
-      btnHtml = `<div style="color:#00ff88">已发卡：${o.card}</div>`;
+      btnHtml = `<div style="color:#00ff88">✅ 已发卡：${o.card}</div>`;
     } else {
-      btnHtml = `<div style="color:#ff407c">已拒绝</div>`;
+      btnHtml = `<div style="color:#ff407c">❌ 已拒绝</div>`;
     }
     d.innerHTML = `
       <div class="title">用户：${o.user}</div>
@@ -255,6 +302,7 @@ function loadOrders(){
   });
 }
 
+// 审核
 function pass(oid){
   const os = JSON.parse(localStorage.getItem('orders')||'[]');
   const idx = os.findIndex(x=>x.id===oid);
@@ -262,13 +310,13 @@ function pass(oid){
   const o = os[idx];
   const key = 'card_'+o.type;
   const cards = JSON.parse(localStorage.getItem(key)||'[]');
-  if(cards.length===0){alert('卡密不足');return;}
+  if(cards.length===0){alert('❌ 卡密不足');return;}
   const card = cards.shift();
   localStorage.setItem(key,JSON.stringify(cards));
   os[idx].status = 'success';
   os[idx].card = card;
   localStorage.setItem('orders',JSON.stringify(os));
-  alert('审核成功！卡密：'+card);
+  alert('✅ 审核成功！卡密：'+card);
   loadOrders();
   loadCardCount();
 }
@@ -278,19 +326,19 @@ function reject(oid){
   const idx = os.findIndex(x=>x.id===oid);
   os[idx].status = 'reject';
   localStorage.setItem('orders',JSON.stringify(os));
-  alert('已拒绝');
+  alert('❌ 已拒绝');
   loadOrders();
 }
 
+// 初始化
 window.onload = function(){
   if(localStorage.getItem('admin')==='ok'){
     document.getElementById('login').style.display = 'none';
     document.getElementById('admin').style.display = 'block';
-    const notice = localStorage.getItem('siteNotice') || '';
-    document.getElementById('noticeContent').value = notice;
-    
+    document.getElementById('noticeContent').value = localStorage.getItem('siteNotice') || '';
     loadCardCount();
     loadAgents();
+    showCurrentApk();
     loadOrders();
   }
 };
