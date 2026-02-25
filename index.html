@@ -581,7 +581,7 @@ function doDownload(){
   window.open(data.url, '_blank');
 }
 
-// 加载代理 + 点击跳QQ加好友
+// 加载代理 + 点击跳转到添加好友或提示手动添加
 function loadAgents(){
   const list = JSON.parse(localStorage.getItem('agentList')||'[]');
   const box = document.getElementById('agentList');
@@ -589,8 +589,11 @@ function loadAgents(){
   list.forEach(agent => {
     const item = document.createElement('div');
     item.className = 'agent-item';
-    item.onclick = ()=>{
-      window.open(`http://wpa.qq.com/msgrd?v=3&uin=${agent.qq}&site=qq&menu=yes`, '_blank');
+    item.onclick = () => {
+      // 先弹出提示，显示代理QQ号
+      alert(`请添加代理QQ：${agent.qq} 进行购买\n\n也可以手动复制QQ号到QQ搜索添加`);
+      // 尝试跳转到QQ添加好友界面（优先使用mqq协议）
+      window.open(`mqq://add_friend?friend_uin=${agent.qq}`, '_blank');
     };
     item.innerHTML = `
       <img class="agent-avatar" src="https://q1.qlogo.cn/g?b=qq&nk=${agent.qq}&s=640" alt="头像">
