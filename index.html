@@ -3,492 +3,204 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carrot - Minecraft 辅助模块</title>
+<title>Carrot - 科技辅助系统</title>
 <style>
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
-
 :root {
-  --bg: #000000;
-  --card: #121212;
+  --bg: #050507;
+  --card: #12151d;
   --text: #e0e6ff;
   --light-text: #a0b0d0;
-  --border: #223;
-  --accent: #00ccff;
+  --border: #252a3a;
+  --blue: #00d1ff;
+  --purple: #9d00ff;
+  --pink: #ff00d1;
+  --glow: 0 0 12px rgba(0,209,255,0.4);
+}
+
+/* 粒子背景 */
+#particles {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
 }
 
 body {
   font-family: 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
-  background: linear-gradient(to bottom, #101010, #000);
+  background: #050507;
   color: var(--text);
   line-height: 1.8;
   min-height: 100vh;
   padding-bottom: 40px;
+  overflow-x: hidden;
 }
 
-.gradient-text {
-  font-weight: bold;
-  background: linear-gradient(90deg, #00f0ff, #0088ff, #8800ff, #00f0ff);
-  background-size: 300% 100%;
+/* 启动动画 */
+#splash {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: #050507;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  z-index: 9999;
+  transition: opacity 0.6s ease;
+}
+#splash.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+.splash-logo {
+  font-size: 36px;
+  background: linear-gradient(90deg, var(--blue), var(--purple));
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  animation: gradientFlow 6s linear infinite;
+  margin-bottom: 20px;
+  animation: bounce 1.5s infinite;
 }
+@keyframes bounce {
+  0%,100%{transform:translateY(0);}50%{transform:translateY(-10px);}
+}
+.loading-bar {
+  width: 160px;
+  height: 4px;
+  background: rgba(255,255,255,0.1);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.loading-progress {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, var(--blue), var(--purple));
+  animation: load 1.4s forwards;
+}
+@keyframes load {100%{width:100%;}}
 
-@keyframes gradientFlow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 300% 50%; }
+.gradient-text {
+  font-weight: bold;
+  background: linear-gradient(90deg, var(--blue), var(--purple), var(--pink));
+  background-size: 250% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: flow 4s linear infinite;
 }
+@keyframes flow {0%{background-position:0% 50%;}100%{background-position:250% 50%;}}
 
 .nav {
   position: fixed;
   top: 0;
   width: 100%;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(10px);
-  padding: 14px 20px;
+  background: rgba(10,12,18,0.85);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+  padding: 16px 20px;
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 999;
 }
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 22px;
-}
+.logo {font-size:24px;font-weight:bold;}
 
 .hero {
-  padding: 20px 20px 30px;
+  padding: 50px 20px 30px;
   text-align: center;
-  margin-top: 70px;
+  margin-top: 60px;
 }
+.hero h1 {font-size:28px;margin-bottom:10px;}
+.hero p {color:var(--light-text);font-size:15px;margin-bottom:24px;}
 
-.hero h1 {
-  font-size: 26px;
-  margin-bottom: 10px;
-}
+.buttons {display:flex;gap:14px;justify-content:center;flex-wrap:wrap;}
+.btn {padding:14px 26px;border-radius:12px;border:none;font-size:15px;font-weight:600;cursor:pointer;transition:all 0.3s ease;}
+.btn-gradient {background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff;box-shadow:0 6px 20px rgba(0,209,255,0.2);}
+.btn-gradient:hover {transform:translateY(-3px);box-shadow:0 8px 24px rgba(0,209,255,0.35);}
 
-.hero p {
-  color: var(--light-text);
-  margin-bottom: 20px;
-  font-size: 15px;
-}
+.user-center {max-width:420px;margin:0 auto;padding:20px;}
+.user-tabs {display:flex;border-radius:14px;overflow:hidden;background:rgba(18,20,28,0.6);margin-bottom:20px;}
+.user-tab {flex:1;padding:14px;text-align:center;color:var(--light-text);cursor:pointer;font-weight:600;transition:0.3s;}
+.user-tab.active {background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff;}
 
-.buttons {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
+.user-form {display:none;}
+.user-form.active {display:block;}
+.user-form input {width:100%;padding:16px;margin-bottom:14px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:14px;color:var(--text);font-size:15px;outline:none;transition:0.3s;}
+.user-form input:focus {border-color:var(--blue);box-shadow:var(--glow);}
+.submit-btn {width:100%;padding:16px;border-radius:14px;background:linear-gradient(90deg,var(--blue),var(--purple));color:#fff;font-weight:bold;border:none;cursor:pointer;transition:0.3s;box-shadow:0 6px 18px rgba(0,209,255,0.2);}
+.submit-btn:hover {transform:translateY(-3px);}
 
-.btn {
-  padding: 12px 24px;
-  border-radius: 8px;
-  border: none;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.2s;
-}
+.user-logined {display:none;}
+.user-card {background:rgba(20,23,32,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:18px;padding:28px 20px;text-align:center;margin-bottom:22px;}
+.user-avatar {width:76px;height:76px;background:linear-gradient(90deg,var(--blue),var(--purple));border-radius:50%;margin:0 auto 16px;display:flex;align-items:center;justify-content:center;font-size:34px;box-shadow:0 0 20px rgba(0,209,255,0.3);}
+.user-name {font-size:22px;margin-bottom:8px;}
+.user-vip {display:inline-block;padding:5px 12px;background:rgba(0,209,255,0.1);color:var(--blue);border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:6px;}
+.user-expire {font-size:13px;color:var(--light-text);}
 
-.btn-gradient {
-  background: linear-gradient(90deg, #00f0ff, #0088ff);
-  color: #fff;
-  font-weight: bold;
-}
+.user-btns {display:flex;gap:12px;margin-bottom:24px;}
+.user-btns .btn {flex:1;padding:16px 0;border-radius:14px;font-size:15px;}
+.btn-exit {background:rgba(255,64,124,0.1);color:#ff407c;border:1px solid rgba(255,64,124,0.2);}
 
-.btn:hover {
-  transform: scale(1.05);
-}
+.user-package,.user-notice {background:rgba(20,23,32,0.5);border:1px solid rgba(255,255,255,0.04);border-radius:16px;padding:20px;margin-bottom:18px;}
+.user-package h3,.user-notice h3 {margin-bottom:12px;font-size:16px;}
+.package-item,.notice-item {font-size:14px;color:var(--light-text);padding:4px 0;}
 
-.user-center {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 30px 20px;
-}
+.user-links {display:flex;gap:12px;margin-bottom:26px;}
+.link-item {flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:16px 8px;text-align:center;font-size:12px;}
+.link-item .icon {font-size:22px;margin-bottom:6px;color:var(--blue);}
 
-.user-tabs {
-  display: flex;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  overflow: hidden;
-  background: #151515;
-}
+/* 折叠面板 */
+.collapse-box {margin-bottom:10px;}
+.collapse-btn {width:100%;background:rgba(22,25,34,0.7);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:16px 20px;text-align:left;color:var(--text);font-size:15px;font-weight:600;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:0.3s;}
+.collapse-btn.active {border-color:var(--blue);background:rgba(22,25,34,0.9);}
+.collapse-btn span {color:var(--blue);font-size:18px;transition:0.3s;}
+.collapse-btn.active span {transform:rotate(180deg);}
+.collapse-body {max-height:0;overflow:hidden;transition:max-height 0.4s ease;}
+.collapse-content {background:rgba(18,20,28,0.4);border-radius:0 0 16px 16px;padding:18px 20px;border:1px solid rgba(255,255,255,0.04);border-top:none;}
+.feature-grid {display:grid;grid-template-columns:1fr 1fr;gap:8px;}
+.feature-item {font-size:13px;color:var(--light-text);display:flex;align-items:center;}
+.feature-item::before {content:"●";color:var(--blue);font-size:10px;margin-right:6px;}
 
-.user-tab {
-  flex: 1;
-  padding: 12px;
-  text-align: center;
-  background: #151515;
-  color: var(--light-text);
-  cursor: pointer;
-  font-weight: bold;
-}
+.price-cards {display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin:10px 0 20px;}
+.price-card {background:rgba(20,23,32,0.5);border:1px solid rgba(255,255,255,0.04);border-radius:14px;padding:18px 12px;text-align:center;}
+.price {font-size:18px;color:var(--blue);font-weight:bold;}
 
-.user-tab.active {
-  background: #0088ff;
-  color: #fff;
-}
+.msg {padding:12px;border-radius:12px;margin-bottom:14px;text-align:center;display:none;font-weight:600;}
+.msg-success {background:rgba(0,255,136,0.08);color:#00ff88;border:1px solid rgba(0,255,136,0.1);}
+.msg-error {background:rgba(255,64,124,0.08);color:#ff407c;border:1px solid rgba(255,64,124,0.1);}
 
-.user-form {
-  display: none;
-}
-
-.user-form.active {
-  display: block;
-}
-
-.user-form input {
-  width: 100%;
-  padding: 14px 16px;
-  margin-bottom: 14px;
-  background: #181818;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--text);
-  font-size: 15px;
-  outline: none;
-}
-
-.user-form input:focus {
-  border-color: #0088ff;
-}
-
-.user-form .submit-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  background: linear-gradient(90deg, #00f0ff, #0088ff);
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  margin-top: 6px;
-}
-
-.user-logined {
-  display: none;
-}
-
-.user-card {
-  background: #151515;
-  border-radius: 14px;
-  padding: 24px;
-  text-align: center;
-  margin-bottom: 20px;
-  border: 1px solid var(--border);
-}
-
-.user-avatar {
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(90deg, #00f0ff, #0088ff);
-  border-radius: 50%;
-  margin: 0 auto 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-}
-
-.user-name {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.user-vip {
-  display: inline-block;
-  padding: 4px 10px;
-  background: #003355;
-  color: #00d0ff;
-  border-radius: 12px;
-  font-size: 12px;
-  margin-bottom: 6px;
-}
-
-.user-expire {
-  font-size: 13px;
-  color: var(--light-text);
-}
-
-.user-btns {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
-.user-btns .btn {
-  flex: 1;
-  padding: 12px 0;
-  font-size: 14px;
-}
-
-.btn-exit {
-  background: #440000;
-  color: #ff6666;
-  border: 1px solid #660000;
-}
-
-.user-package {
-  background: #151515;
-  border-radius: 12px;
-  padding: 18px;
-  margin-bottom: 20px;
-  border: 1px solid var(--border);
-}
-
-.user-package h3 {
-  font-size: 16px;
-  margin-bottom: 12px;
-  text-align: left;
-}
-
-.package-item {
-  font-size: 14px;
-  color: var(--light-text);
-  padding: 6px 0;
-}
-
-.user-notice {
-  background: #151515;
-  border-radius: 12px;
-  padding: 18px;
-  margin-bottom: 20px;
-  border: 1px solid var(--border);
-}
-
-.user-notice h3 {
-  font-size: 16px;
-  margin-bottom: 10px;
-  text-align: left;
-}
-
-.notice-item {
-  font-size: 13px;
-  color: var(--light-text);
-  padding: 4px 0;
-}
-
-.user-links {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.link-item {
-  background: #151515;
-  border-radius: 10px;
-  padding: 14px 8px;
-  font-size: 12px;
-  border: 1px solid var(--border);
-  cursor: pointer;
-}
-
-.link-item .icon {
-  font-size: 20px;
-  margin-bottom: 6px;
-}
-
-.msg {
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 14px;
-  text-align: center;
-  display: none;
-}
-
-.msg-success {
-  background: #004422;
-  color: #00ff88;
-  border: 1px solid #006633;
-}
-
-.msg-error {
-  background: #440000;
-  color: #ff6666;
-  border: 1px solid #660000;
-}
-
-.container {
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.collapsible {
-  background: var(--card);
-  cursor: pointer;
-  padding: 16px 20px;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid var(--border);
-  color: var(--text);
-}
-
-.collapsible .category-icon {
-  font-size: 22px;
-  margin-right: 12px;
-}
-
-.collapsible .toggle-icon {
-  color: #00ccff;
-  transition: transform 0.3s;
-}
-
-.collapsible.active .toggle-icon {
-  transform: rotate(180deg);
-}
-
-.content {
-  padding: 0 20px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  background: #181818;
-  border-radius: 0 0 10px;
-  margin-top: -8px;
-  margin-bottom: 12px;
-  border: 1px solid var(--border);
-  border-top: none;
-}
-
-.feature-list {
-  padding: 16px 0;
-  columns: 1;
-}
-
-@media (min-width: 600px) {
-  .feature-list {
-    columns: 2;
-  }
-}
-
-.feature-item {
-  padding: 4px 0;
-  font-size: 14px;
-  color: var(--light-text);
-  break-inside: avoid;
-}
-
-.feature-item::before {
-  content: attr(data-icon);
-  margin-right: 8px;
-  color: #00ccff;
-  opacity: 0.8;
-}
-
-.section-box {
-  margin: 20px 0;
-  text-align: center;
-}
-
-.section-box h2 {
-  font-size: 20px;
-  margin-bottom: 20px;
-}
-
-.price-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.price-card {
-  background: #151515;
-  padding: 20px 10px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-}
-
-.price {
-  font-size: 18px;
-  color: #00eeff;
-  font-weight: bold;
-}
-
-.group-info {
-  font-size: 17px;
-  padding: 20px 0;
-  color: var(--text);
-}
-
-.group-info span {
-  color: #00ddff;
-  font-size: 19px;
-  font-weight: bold;
-}
-
-.agent-info {
-  color: var(--light-text);
-  font-size: 15px;
-}
-
-.update {
-  padding: 30px 20px;
-  text-align: center;
-  background: var(--card);
-  margin: 20px;
-  border-radius: 10px;
-}
-
-.link {
-  color: #00aaee;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.disclaimer {
-  max-width: 400px;
-  margin: 20px auto;
-  padding: 16px;
-  background: #1a1a1a;
-  border-left: 4px solid #0088ff;
-  border-radius: 8px;
-  font-size: 13px;
-  color: #ccd6f6;
-  line-height: 1.6;
-}
-
-.footer {
-  padding: 25px 20px;
-  text-align: center;
-  background: #0a0a0a;
-  color: #668;
-  font-size: 14px;
-  margin-top: 20px;
-}
+.disclaimer {background:rgba(20,23,32,0.4);border-left:3px solid var(--blue);border-radius:12px;padding:16px;font-size:12px;color:var(--light-text);margin:20px 0;}
+.footer {padding:30px 20px;text-align:center;color:#668;font-size:13px;}
 </style>
 </head>
 
 <body>
 
+<!-- 粒子背景 -->
+<div id="particles"></div>
+
+<!-- 启动动画 -->
+<div id="splash">
+  <div class="splash-logo">🥕 Carrot</div>
+  <div class="loading-bar"><div class="loading-progress"></div></div>
+</div>
+
 <div class="nav">
-  <div class="logo gradient-text">🥕 Carrot</div>
+  <div class="logo gradient-text">🥕 Carrot 科技辅助系统</div>
 </div>
 
 <div class="hero">
-  <h1 class="gradient-text">让生存更简单，让创造更自由</h1>
-  <p>轻量级、开源、安全的 Minecraft 辅助模块</p>
+  <h1 class="gradient-text">让生存更简单 · 让创造更自由</h1>
+  <p>轻量级 · 稳定 · 高效 · 安全</p>
   <div class="buttons">
     <button class="btn btn-gradient" id="downloadBtn">加载中...</button>
   </div>
@@ -496,10 +208,9 @@ body {
 
 <div class="user-center">
   <div class="user-tabs" id="user-tabs">
-    <div class="user-tab active" onclick="switchForm('login')">登录</div>
-    <div class="user-tab" onclick="switchForm('reg')">注册</div>
+    <div class="user-tab active" onclick="switchForm('login')">账号登录</div>
+    <div class="user-tab" onclick="switchForm('reg')">注册账号</div>
   </div>
-
   <div id="msg" class="msg"></div>
 
   <div id="login-form" class="user-form active">
@@ -509,9 +220,9 @@ body {
   </div>
 
   <div id="reg-form" class="user-form">
-    <input type="text" id="reg-user" placeholder="请输入用户名">
-    <input type="password" id="reg-pwd" placeholder="请输入密码">
-    <input type="password" id="reg-pwd2" placeholder="请确认密码">
+    <input type="text" id="reg-user" placeholder="用户名">
+    <input type="password" id="reg-pwd" placeholder="密码">
+    <input type="password" id="reg-pwd2" placeholder="确认密码">
     <button class="submit-btn" onclick="userRegister()">立即注册</button>
   </div>
 
@@ -524,7 +235,7 @@ body {
     </div>
 
     <div class="user-btns">
-      <button class="btn btn-gradient" onclick="doDownload()">📥 下载</button>
+      <button class="btn btn-gradient" onclick="doDownload()">📥 立即下载</button>
       <button class="btn btn-exit" onclick="logout()">🚪 退出登录</button>
     </div>
 
@@ -540,891 +251,276 @@ body {
       <div class="notice-item">📢 祝各位用户使用愉快</div>
     </div>
 
+    <!-- 快捷按钮：加群 + 代理 -->
     <div class="user-links">
       <div class="link-item" onclick="jumpToGroup()">
-        <div class="icon">🐧</div>加群
+        <div class="icon">🐧</div>官方群
+      </div>
+      <div class="link-item" style="opacity:0.6;pointer-events:none;">
+        <div class="icon">🔗</div>代理<br><small>未开放</small>
       </div>
     </div>
 
-    <!-- 👇 原来的简介全部搬到这里，登录才能看 👇 -->
-    <div class="container">
-      <button class="collapsible gradient-text" onclick="toggle(this)">
-        <span class="category-icon">⚔️</span> Combat
-        <span class="toggle-icon">▼</span>
-      </button>
-      <div class="content">
-        <div class="feature-list">
-          <div class="feature-item" data-icon="⭕">无痕光环</div>
-          <div class="feature-item" data-icon="🌊">激流</div>
-          <div class="feature-item" data-icon="🛡️">虚影屏障</div>
-          <div class="feature-item" data-icon="🗡️">刀刃暴击</div>
-          <div class="feature-item" data-icon="🔄">环绕</div>
-          <div class="feature-item" data-icon="☠️">自杀</div>
-          <div class="feature-item" data-icon="🤡">自嘲</div>
-          <div class="feature-item" data-icon="🖱️">自动点击</div>
-          <div class="feature-item" data-icon="📏">碰撞箱</div>
-          <div class="feature-item" data-icon="🛡️">反击退</div>
-          <div class="feature-item" data-icon="🔨">刀刃重锤</div>
-          <div class="feature-item" data-icon="👤">背后跟随</div>
-          <div class="feature-item" data-icon="☠️">杀戮光环</div>
+    <div class="collapse-box">
+      <div class="collapse-btn" onclick="toggleCollapse(this)">
+        <span>⚔️ Combat 战斗功能</span>
+        <span>▼</span>
+      </div>
+      <div class="collapse-body">
+        <div class="collapse-content">
+          <div class="feature-grid">
+            <div class="feature-item">无痕光环</div>
+            <div class="feature-item">激流</div>
+            <div class="feature-item">虚影屏障</div>
+            <div class="feature-item">刀刃暴击</div>
+            <div class="feature-item">环绕</div>
+            <div class="feature-item">自杀</div>
+            <div class="feature-item">自嘲</div>
+            <div class="feature-item">自动点击</div>
+            <div class="feature-item">碰撞箱</div>
+            <div class="feature-item">反击退</div>
+            <div class="feature-item">刀刃重锤</div>
+            <div class="feature-item">背后跟随</div>
+            <div class="feature-item">杀戮光环</div>
+          </div>
         </div>
       </div>
-
-      <button class="collapsible gradient-text" onclick="toggle(this)">
-        <span class="category-icon">🏃</span> Movement
-        <span class="toggle-icon">▼</span>
-      </button>
-      <div class="content">
-        <div class="feature-list">
-          <div class="feature-item" data-icon="🛑">快速停止</div>
-          <div class="feature-item" data-icon="🦘">高跳</div>
-          <div class="feature-item" data-icon="🚀">无减速</div>
-          <div class="feature-item" data-icon="☁️">静空</div>
-          <div class="feature-item" data-icon="✈️">平飞</div>
-          <div class="feature-item" data-icon="⬆️">自动突起</div>
-          <div class="feature-item" data-icon="🌪️">飞行</div>
-          <div class="feature-item" data-icon="🦔">无下坠伤害</div>
-          <div class="feature-item" data-icon="🕸️">反蜘蛛网</div>
-          <div class="feature-item" data-icon="👥">跟随玩家</div>
-          <div class="feature-item" data-icon="🎒">背包移动</div>
-          <div class="feature-item" data-icon="⬇️">虚空回弹</div>
-          <div class="feature-item" data-icon="🏊">空气游泳</div>
-          <div class="feature-item" data-icon="⚡">玩家完全听懂了，我**直接给你改好一整套最终代码**，你**复制覆盖就能用**，不用你自己动手改。
-
-我按你的要求全部改好了：
-- 把**简介所有内容搬到用户中心**
-- 删掉 **查看文档** 按钮
-- 简介内容 **必须登录才能看**
-- 删掉 **卡密兑换**
-- 加上 **自动登录**（下次打开直接登录，不用再输账号密码）
-
----
-
-# ① 最终版 index.html（主站）
-```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Carrot - Minecraft 辅助模块</title>
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-:root {
-  --bg: #000000;
-  --card: #121212;
-  --text: #e0e6ff;
-  --light-text: #a0b0d0;
-  --border: #223;
-  --accent: #00ccff;
-}
-
-body {
-  font-family: 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
-  background: linear-gradient(to bottom, #101010, #000);
-  color: var(--text);
-  line-height: 1.8;
-  min-height: 100vh;
-  padding-bottom: 40px;
-}
-
-.gradient-text {
-  font-weight: bold;
-  background: linear-gradient(90deg, #00f0ff, #0088ff, #8800ff, #00f0ff);
-  background-size: 300% 100%;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  animation: gradientFlow 6s linear infinite;
-}
-
-@keyframes gradientFlow {
-  0% { background-position: 0% 50%; }
-  100% { background-position: 300% 50%; }
-}
-
-.nav {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  background: rgba(0,0,0,0.85);
-  backdrop-filter: blur(10px);
-  padding: 14px 20px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 22px;
-}
-
-.hero {
-  padding: 20px 20px 30px;
-  text-align: center;
-  margin-top: 70px;
-}
-
-.hero h1 {
-  font-size: 26px;
-  margin-bottom: 10px;
-}
-
-.hero p {
-  color: var(--light-text);
-  margin-bottom: 20px;
-  font-size: 15px;
-}
-
-.buttons {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.btn {
-  padding: 12px 24px;
-  border-radius: 8px;
-  border: none;
-  font-size: 15px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: 0.2s;
-}
-
-.btn-gradient {
-  background: linear-gradient(90deg, #00f0ff, #0088ff);
-  color: #fff;
-  font-weight: bold;
-}
-
-.btn:hover {
-  transform: scale(1.05);
-}
-
-.user-center {
-  max-width: 400px;
-  margin: 0 auto;
-  padding: 30px 20px;
-}
-
-.user-tabs {
-  display: flex;
-  margin-bottom: 20px;
-  border-radius: 10px;
-  overflow: hidden;
-  background: #151515;
-}
-
-.user-tab {
-  flex: 1;
-  padding: 12px;
-  text-align: center;
-  background: #151515;
-  color: var(--light-text);
-  cursor: pointer;
-  font-weight: bold;
-}
-
-.user-tab.active {
-  background: #0088ff;
-  color: #fff;
-}
-
-.user-form {
-  display: none;
-}
-
-.user-form.active {
-  display: block;
-}
-
-.user-form input {
-  width: 100%;
-  padding: 14px 16px;
-  margin-bottom: 14px;
-  background: #181818;
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  color: var(--text);
-  font-size: 15px;
-  outline: none;
-}
-
-.user-form input:focus {
-  border-color: #0088ff;
-}
-
-.user-form .submit-btn {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  background: linear-gradient(90deg, #00f0ff, #0088ff);
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  cursor: pointer;
-  margin-top: 6px;
-}
-
-.user-logined {
-  display: none;
-}
-
-.user-card {
-  background: #151515;
-  border-radius: 14px;
-  padding: 24px;
-  text-align: center;
-  margin-bottom: 20px;
-  border: 1px solid var(--border);
-}
-
-.user-avatar {
-  width: 70px;
-  height: 70px;
-  background: linear-gradient(90deg, #00f0ff, #0088ff);
-  border-radius: 50%;
-  margin: 0 auto 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-}
-
-.user-name {
-  font-size: 20px;
-  font-weight: bold;
-  margin-bottom: 6px;
-}
-
-.user-vip {
-  display: inline-block;
-  padding: 4px 10px;
-  background: #003355;
-  color: #00d0ff;
-  border-radius: 12px;
-  font-size: 12px;
-  margin-bottom: 6px;
-}
-
-.user-expire {
-  font-size: 13px;
-  color: var(--light-text);
-}
-
-.user-btns {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-
-.user-btns .btn {
-  flex: 1;
-  padding: 12px 0;
-  font-size: 14px;
-}
-
-.btn-exit {
-  background: #440000;
-  color: #ff6666;
-  border: 1px solid #660000;
-}
-
-.user-package {
-  background: #151515;
-  border-radius: 12px;
-  padding: 18px;
-  margin-bottom: 20px;
-  border: 1px solid var(--border);
-}
-
-.user-package h3 {
-  font-size: 16px;
-  margin-bottom: 12px;
-  text-align: left;
-}
-
-.package-item {
-  font-size: 14px;
-  color: var(--light-text);
-  padding: 6px 0;
-}
-
-.user-notice {
-  background: #151515;
-  border-radius: 12px;
-  padding: 18px;
-  margin-bottom: 20px;
-  border: 1px solid var(--border);
-}
-
-.user-notice h3 {
-  font-size: 16px;
-  margin-bottom: 10px;
-  text-align: left;
-}
-
-.notice-item {
-  font-size: 13px;
-  color: var(--light-text);
-  padding: 4px 0;
-}
-
-.user-links {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  text-align: center;
-  margin-bottom: 20px;
-}
-
-.link-item {
-  background: #151515;
-  border-radius: 10px;
-  padding: 14px 8px;
-  font-size: 12px;
-  border: 1px solid var(--border);
-  cursor: pointer;
-}
-
-.link-item .icon {
-  font-size: 20px;
-  margin-bottom: 6px;
-}
-
-.msg {
-  padding: 12px;
-  border-radius: 8px;
-  margin-bottom: 14px;
-  text-align: center;
-  display: none;
-}
-
-.msg-success {
-  background: #004422;
-  color: #00ff88;
-  border: 1px solid #006633;
-}
-
-.msg-error {
-  background: #440000;
-  color: #ff6666;
-  border: 1px solid #660000;
-}
-
-.container {
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.collapsible {
-  background: var(--card);
-  cursor: pointer;
-  padding: 16px 20px;
-  width: 100%;
-  border: none;
-  text-align: left;
-  outline: none;
-  font-size: 18px;
-  font-weight: bold;
-  border-radius: 10px;
-  margin-bottom: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border: 1px solid var(--border);
-  color: var(--text);
-}
-
-.collapsible .category-icon {
-  font-size: 22px;
-  margin-right: 12px;
-}
-
-.collapsible .toggle-icon {
-  color: #00ccff;
-  transition: transform 0.3s;
-}
-
-.collapsible.active .toggle-icon {
-  transform: rotate(180deg);
-}
-
-.content {
-  padding: 0 20px;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  background: #181818;
-  border-radius: 0 0 10px;
-  margin-top: -8px;
-  margin-bottom: 12px;
-  border: 1px solid var(--border);
-  border-top: none;
-}
-
-.feature-list {
-  padding: 16px 0;
-  columns: 1;
-}
-
-@media (min-width: 600px) {
-  .feature-list {
-    columns: 2;
-  }
-}
-
-.feature-item {
-  padding: 4px 0;
-  font-size: 14px;
-  color: var(--light-text);
-  break-inside: avoid;
-}
-
-.feature-item::before {
-  content: attr(data-icon);
-  margin-right: 8px;
-  color: #00ccff;
-  opacity: 0.8;
-}
-
-.section-box {
-  margin: 20px 0;
-  text-align: center;
-}
-
-.section-box h2 {
-  font-size: 20px;
-  margin-bottom: 20px;
-}
-
-.price-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.price-card {
-  background: #151515;
-  padding: 20px 10px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-}
-
-.price {
-  font-size: 18px;
-  color: #00eeff;
-  font-weight: bold;
-}
-
-.group-info {
-  font-size: 17px;
-  padding: 20px 0;
-  color: var(--text);
-}
-
-.group-info span {
-  color: #00ddff;
-  font-size: 19px;
-  font-weight: bold;
-}
-
-.agent-info {
-  color: var(--light-text);
-  font-size: 15px;
-}
-
-.update {
-  padding: 30px 20px;
-  text-align: center;
-  background: var(--card);
-  margin: 20px;
-  border-radius: 10px;
-}
-
-.link {
-  color: #00aaee;
-  text-decoration: none;
-  font-weight: bold;
-}
-
-.disclaimer {
-  max-width: 400px;
-  margin: 20px auto;
-  padding: 16px;
-  background: #1a1a1a;
-  border-left: 4px solid #0088ff;
-  border-radius: 8px;
-  font-size: 13px;
-  color: #ccd6f6;
-  line-height: 1.6;
-}
-
-.footer {
-  padding: 25px 20px;
-  text-align: center;
-  background: #0a0a0a;
-  color: #668;
-  font-size: 14px;
-  margin-top: 20px;
-}
-</style>
-</head>
-
-<body>
-
-<div class="nav">
-  <div class="logo gradient-text">🥕 Carrot</div>
-</div>
-
-<div class="hero">
-  <h1 class="gradient-text">让生存更简单，让创造更自由</h1>
-  <p>轻量级、开源、安全的 Minecraft 辅助模块</p>
-  <div class="buttons">
-    <button class="btn btn-gradient" id="downloadBtn">加载中...</button>
-  </div>
-</div>
-
-<div class="user-center">
-  <div class="user-tabs" id="user-tabs">
-    <div class="user-tab active" onclick="switchForm('login')">登录</div>
-    <div class="user-tab" onclick="switchForm('reg')">注册</div>
-  </div>
-
-  <div id="msg" class="msg"></div>
-
-  <div id="login-form" class="user-form active">
-    <input type="text" id="login-user" placeholder="请输入用户名">
-    <input type="password" id="login-pwd" placeholder="请输入密码">
-    <button class="submit-btn" onclick="userLogin()">立即登录</button>
-  </div>
-
-  <div id="reg-form" class="user-form">
-    <input type="text" id="reg-user" placeholder="请输入用户名">
-    <input type="password" id="reg-pwd" placeholder="请输入密码">
-    <input type="password" id="reg-pwd2" placeholder="请确认密码">
-    <button class="submit-btn" onclick="userRegister()">立即注册</button>
-  </div>
-
-  <div id="user-page" class="user-logined">
-    <div class="user-card">
-      <div class="user-avatar">🥕</div>
-      <div class="user-name gradient-text" id="show-username">Carrot用户</div>
-      <div class="user-vip" id="vip-level">普通用户</div>
-      <div class="user-expire" id="vip-expire">会员到期：未开通</div>
     </div>
-
-    <div class="user-btns">
-      <button class="btn btn-gradient" onclick="doDownload()">📥 下载</button>
-      <button class="btn btn-exit" onclick="logout()">🚪 退出登录</button>
+    <div class="collapse-box">
+      <div class="collapse-btn" onclick="toggleCollapse(this)">
+        <span>🏃 Movement 移动功能</span>
+        <span>▼</span>
+      </div>
+      <div class="collapse-body">
+        <div class="collapse-content">
+          <div class="feature-grid">
+            <div class="feature-item">快速停止</div>
+            <div class="feature-item">高跳</div>
+            <div class="feature-item">无减速</div>
+            <div class="feature-item">静空</div>
+            <div class="feature-item">平飞</div>
+            <div class="feature-item">自动突起</div>
+            <div class="feature-item">飞行</div>
+            <div class="feature-item">无下坠伤害</div>
+            <div class="feature-item">反蜘蛛网</div>
+            <div class="feature-item">跟随玩家</div>
+            <div class="feature-item">背包移动</div>
+            <div class="feature-item">虚空回弹</div>
+            <div class="feature-item">空气游泳</div>
+            <div class="feature-item">玩家速度</div>
+            <div class="feature-item">远跳</div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="user-package">
-      <h3 class="gradient-text">我的套餐</h3>
-      <div class="package-item" id="pkg-name">当前套餐：无</div>
-      <div class="package-item">可用功能：基础功能</div>
+    <div class="collapse-box">
+      <div class="collapse-btn" onclick="toggleCollapse(this)">
+        <span>👤 Player 玩家功能</span>
+        <span>▼</span>
+      </div>
+      <div class="collapse-body">
+        <div class="collapse-content">
+          <div class="feature-grid">
+            <div class="feature-item">范围破坏</div>
+            <div class="feature-item">点击传送</div>
+            <div class="feature-item">世界速度</div>
+            <div class="feature-item">搭路</div>
+            <div class="feature-item">反踢出</div>
+            <div class="feature-item">自动破坏</div>
+            <div class="feature-item">崩溃服务器</div>
+            <div class="feature-item">点击破坏</div>
+            <div class="feature-item">飞船</div>
+            <div class="feature-item">箱子小偷</div>
+            <div class="feature-item">箱子光环</div>
+            <div class="feature-item">反侵入</div>
+            <div class="feature-item">方块距离</div>
+            <div class="feature-item">背包整理</div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="user-notice">
-      <h3 class="gradient-text">官方公告</h3>
-      <div class="notice-item">📢 v1.2.0 版本已更新</div>
-      <div class="notice-item">📢 祝各位用户使用愉快</div>
+    <div class="collapse-box">
+      <div class="collapse-btn" onclick="toggleCollapse(this)">
+        <span>📦 Misc 杂项功能</span>
+        <span>▼</span>
+      </div>
+      <div class="collapse-body">
+        <div class="collapse-content">
+          <div class="feature-grid">
+            <div class="feature-item">自动发言</div>
+            <div class="feature-item">玩家踢出</div>
+            <div class="feature-item">停止发包</div>
+            <div class="feature-item">无敌模式</div>
+            <div class="feature-item">远程商店</div>
+            <div class="feature-item">智能队友</div>
+            <div class="feature-item">生成坐骑</div>
+            <div class="feature-item">崩溃器</div>
+            <div class="feature-item">重复发包</div>
+            <div class="feature-item">自由摄像机</div>
+            <div class="feature-item">延迟发包</div>
+            <div class="feature-item">快速进货</div>
+          </div>
+        </div>
+      </div>
     </div>
-
-    <div class="user-links">
-      <div class="link-item" onclick="jumpToGroup()">
-        <div class="icon">🐧</div>加群
+    <div class="collapse-box">
+      <div class="collapse-btn" onclick="toggleCollapse(this)">
+        <span>🎨 Visual 视觉功能</span>
+        <span>▼</span>
+      </div>
+      <div class="collapse-body">
+        <div class="collapse-content">
+          <div class="feature-grid">
+            <div class="feature-item">绘制选中</div>
+            <div class="feature-item">粒子光环</div>
+            <div class="feature-item">数组列表</div>
+            <div class="feature-item">摄像机</div>
+            <div class="feature-item">色彩校正</div>
+            <div class="feature-item">绘制范围</div>
+            <div class="feature-item">夜视</div>
+            <div class="feature-item">手部动画</div>
+            <div class="feature-item">强制显示坐标</div>
+            <div class="feature-item">实体连线</div>
+            <div class="feature-item">缓慢挥手</div>
+            <div class="feature-item">放大镜</div>
+            <div class="feature-item">平滑挥手</div>
+            <div class="feature-item">天气颜色</div>
+            <div class="feature-item">箱子绘制</div>
+            <div class="feature-item">神奇牛光环</div>
+            <div class="feature-item">大陀螺</div>
+            <div class="feature-item">绘制光环</div>
+            <div class="feature-item">水印</div>
+            <div class="feature-item">实体绘制</div>
+            <div class="feature-item">中文模式</div>
+            <div class="feature-item">雾</div>
+            <div class="feature-item">世界光</div>
+            <div class="feature-item">攻击效果</div>
+            <div class="feature-item">速度提示</div>
+            <div class="feature-item">绘制路线</div>
+            <div class="feature-item">视觉秒杀</div>
+            <div class="feature-item">移动光环</div>
+            <div class="feature-item">矿透</div>
+            <div class="feature-item">景深</div>
+            <div class="feature-item">无抖动</div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- 👇 原来的简介全部搬到这里，登录才能看 👇 -->
-    <div class="container">
-      <button class="collapsible gradient-text" onclick="toggle(this)">
-        <span class="category-icon">⚔️</span> Combat
-        <span class="toggle-icon">▼</span>
-      </button>
-      <div class="content">
-        <div class="feature-list">
-          <div class="feature-item" data-icon="⭕">无痕光环</div>
-          <div class="feature-item" data-icon="🌊">激流</div>
-          <div class="feature-item" data-icon="🛡️">虚影屏障</div>
-          <div class="feature-item" data-icon="🗡️">刀刃暴击</div>
-          <div class="feature-item" data-icon="🔄">环绕</div>
-          <div class="feature-item" data-icon="☠️">自杀</div>
-          <div class="feature-item" data-icon="🤡">自嘲</div>
-          <div class="feature-item" data-icon="🖱️">自动点击</div>
-          <div class="feature-item" data-icon="📏">碰撞箱</div>
-          <div class="feature-item" data-icon="🛡️">反击退</div>
-          <div class="feature-item" data-icon="🔨">刀刃重锤</div>
-          <div class="feature-item" data-icon="👤">背后跟随</div>
-          <div class="feature-item" data-icon="☠️">杀戮光环</div>
-        </div>
+    <div style="margin-top:26px">
+      <h3 class="gradient-text" style="margin-bottom:14px;text-align:center">会员套餐</h3>
+      <div class="price-cards">
+        <div class="price-card"><h4>周卡</h4><div class="price">¥12</div></div>
+        <div class="price-card"><h4>月卡</h4><div class="price">¥25</div></div>
+        <div class="price-card"><h4>季卡</h4><div class="price">¥36</div></div>
+        <div class="price-card"><h4>永久</h4><div class="price">¥65</div></div>
       </div>
+    </div>
 
-      <button class="collapsible gradient-text" onclick="toggle(this)">
-        <span class="category-icon">🏃</span> Movement
-        <span class="toggle-icon">▼</span>
-      </button>
-      <div class="content">
-        <div class="feature-list">
-          <div class="feature-item" data-icon="🛑">快速停止</div>
-          <div class="feature-item" data-icon="🦘">高跳</div>
-          <div class="feature-item" data-icon="🚀">无减速</div>
-          <div class="feature-item" data-icon="☁️">静空</div>
-          <div class="feature-item" data-icon="✈️">平飞</div>
-          <div class="feature-item" data-icon="⬆️">自动突起</div>
-          <div class="feature-item" data-icon="🌪️">飞行</div>
-          <div class="feature-item" data-icon="🦔">无下坠伤害</div>
-          <div class="feature-item" data-icon="🕸️">反蜘蛛网</div>
-          <div class="feature-item" data-icon="👥">跟随玩家</div>
-          <div class="feature-item" data-icon="🎒">背包移动</div>
-          <div class="feature-item" data-icon="⬇️">虚空回弹</div>
-          <div class="feature-item" data-icon="🏊">空气游泳</div>
-          <div class="feature-item" data-icon="⚡">玩家速度</div>
-          <div class="feature-item" data-icon="🦘">远跳</div>
-        </div>
-      </div>
-
-      <button class="collapsible gradient-text" onclick="toggle(this)">
-        <span class="category-icon">👤</span> Player
-        <span class="toggle-icon">▼</span>
-      </button>
-      <div class="content">
-        <div class="feature-list">
-          <div class="feature-item" data-icon="💥">范围破坏</div>
-          <div class="feature-item" data-icon="📍">点击传送</div>
-          <div class="feature-item" data-icon="⏱️">世界速度</div>
-          <div class="feature-item" data-icon="🧱">搭路</div>
-          <div class="feature-item" data-icon="🚫">反踢出</div>
-          <div class="feature-item" data-icon="⛏️">自动破坏</div>
-          <div class="feature-item" data-icon="💣">崩溃服务器</div>
-          <div class="feature-item" data-icon="👆">点击破坏</div>
-          <div class="feature-item" data-icon="🚀">飞船</div>
-          <div class="feature-item" data-icon="💰">箱子小偷</div>
-          <div class="feature-item" data-icon="⭕">箱子光环</div>
-          <div class="feature-item" data-icon="🛡️">反侵入</div>
-          <div class="feature-item" data-icon="📏">方块距离</div>
-          <div class="feature-item" data-icon="🧹">背包整理</div>
-        </div>
-      </div>
-
-      <button class="collapsible gradient-text" onclick="toggle(this)">
-        <span class="category-icon">📦</span> Misc
-        <span class="toggle-icon">▼</span>
-      </button>
-      <div class="content">
-        <div class="feature-list">
-          <div class="feature-item" data-icon="💬">自动发言</div>
-          <div class="feature-item" data-icon="👋">玩家踢出</div>
-          <div class="feature-item" data-icon="⏹️">停止发包</div>
-          <div class="feature-item" data-icon="🛡️">无敌模式</div>
-          <div class="feature-item" data-icon="🏪">远程商店</div>
-          <div class="feature-item" data-icon="🤖">智能队友</div>
-          <div class="feature-item" data-icon="🐎">生成坐骑</div>
-          <div class="feature-item" data-icon="💣">崩溃器</div>
-          <div class="feature-item" data-icon="🔁">重复发包</div>
-          <div class="feature-item" data-icon="🎥">自由摄像机</div>
-          <div class="feature-item" data-icon="🕒">延迟发包</div>
-          <div class="feature-item" data-icon="🛒">快速进货</div>
-        </div>
-      </div>
-
-      <button class="collapsible gradient-text" onclick="toggle(this)">
-        <span class="category-icon">🎨</span> Visual
-        <span class="toggle-icon">▼</span>
-      </button>
-      <div class="content">
-        <div class="feature-list">
-          <div class="feature-item" data-icon="🔍">绘制选中</div>
-          <div class="feature-item" data-icon="✨">粒子光环</div>
-          <div class="feature-item" data-icon="📋">数组列表</div>
-          <div class="feature-item" data-icon="🎥">摄像机</div>
-          <div class="feature-item" data-icon="🌈">色彩校正</div>
-          <div class="feature-item" data-icon="⭕">绘制范围</div>
-          <div class="feature-item" data-icon="🌙">夜视</div>
-          <div class="feature-item" data-icon="✋">手部动画</div>
-          <div class="feature-item" data-icon="📍">强制显示坐标</div>
-          <div class="feature-item" data-icon="📈">实体连线</div>
-          <div class="feature-item" data-icon="🐢">缓慢挥手</div>
-          <div class="feature-item" data-icon="🔍">放大镜</div>
-          <div class="feature-item" data-icon="🌊">平滑挥手</div>
-          <div class="feature-item" data-icon="🌤️">天气颜色</div>
-          <div class="feature-item" data-icon="📦">箱子绘制</div>
-          <div class="feature-item" data-icon="🐮">神奇牛光环</div>
-          <div class="feature-item" data-icon="🌀">大陀螺</div>
-          <div class="feature-item" data-icon="⭕">绘制光环</div>
-          <div class="feature-item" data-icon="ℹ️">水印</div>
-          <div class="feature-item" data-icon="👤">实体绘制</div>
-          <div class="feature-item" data-icon="🇨🇳">中文模式</div>
-          <div class="feature-item" data-icon="🌫️">雾</div>
-          <div class="feature-item" data-icon="☀️">世界光</div>
-          <div class="feature-item" data-icon="💥">攻击效果</div>
-          <div class="feature-item" data-icon="⚡">速度提示</div>
-          <div class="feature-item" data-icon="🗺️">绘制路线</div>
-          <div class="feature-item" data-icon="💥">视觉秒杀</div>
-          <div class="feature-item" data-icon="⭕">移动光环</div>
-          <div class="feature-item" data-icon="⛏️">矿透</div>
-          <div class="feature-item" data-icon="👁️">景深</div>
-          <div class="feature-item" data-icon="✅">无抖动</div>
-        </div>
-      </div>
-
-      <div class="section-box">
-        <h2 class="gradient-text">选择方案</h2>
-        <div class="price-cards">
-          <div class="price-card"><h3 class="gradient-text">周卡</h3><div class="price">￥12</div></div>
-          <div class="price-card"><h3 class="gradient-text">月卡</h3><div class="price">￥25</div></div>
-          <div class="price-card"><h3 class="gradient-text">季卡</h3><div class="price">￥36</div></div>
-          <div class="price-card"><h3 class="gradient-text">年卡</h3><div class="price">￥50</div></div>
-          <div class="price-card"><h3 class="gradient-text">永久卡</h3><div class="price">￥65</div></div>
-        </div>
-      </div>
-
-      <div class="section-box">
-        <h2 class="gradient-text">官方群聊</h2>
-        <div class="group-info">🐧 1003106744</div>
-      </div>
-
-      <div class="disclaimer">
-        ⚠️ <strong>免责声明</strong><br>
-        本工具仅用于<strong>单人游戏、离线模式或私人服务器测试</strong>，旨在提升单机游戏体验。<br>
-        使用者需严格遵守《Minecraft》用户协议及各服务器规则，<strong>严禁在公共服务器、联机对战中使用</strong>。<br>
-        因违规使用导致账号封禁、设备异常或法律责任，均由使用者自行承担，开发者与本站不承担任何责任。
-      </div>
+    <div class="disclaimer">
+      ⚠️ 本工具仅用于单人/私服测试，禁止用于官方服务器，违规后果自负。
     </div>
   </div>
 </div>
 
-<div class="footer">© 2026 Carrot Team | MIT 开源协议</div>
+<div class="footer">© 2026 Carrot · All Rights Reserved</div>
 
 <script>
+// 粒子背景简易版
+function createParticles() {
+  const p = document.getElementById('particles');
+  for(let i=0;i<60;i++){
+    let dot = document.createElement('div');
+    dot.style.cssText = `
+      position:absolute;
+      width:${Math.random()*3+1}px;
+      height:${Math.random()*3+1}px;
+      background:#00d1ff;
+      border-radius:50%;
+      top:${Math.random()*100}%;
+      left:${Math.random()*100}%;
+      opacity:${Math.random()*0.6+0.2};
+      box-shadow:0 0 6px #00d1ff;
+      animation:float ${Math.random()*6+4}s linear infinite;
+    `;
+    p.appendChild(dot);
+  }
+  let s = document.createElement('style');
+  s.innerHTML = '@keyframes float{0%{transform:translate(0,0);}50%{transform:translate(10px,10px);}100%{transform:translate(0,0);}}';
+  document.head.appendChild(s);
+}
+
 var currentUser = null;
 var apkInfo = null;
 
-function toggle(el) {
-  el.classList.toggle('active');
-  const c = el.nextElementSibling;
-  c.style.maxHeight = c.style.maxHeight ? null : c.scrollHeight + 'px';
+function toggleCollapse(el) {
+  el.classList.toggle("active");
+  var body = el.nextElementSibling;
+  body.style.maxHeight = body.style.maxHeight ? null : body.scrollHeight + 100 + "px";
 }
 
 function switchForm(type) {
-  document.querySelectorAll('.user-tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.user-form').forEach(f => f.classList.remove('active'));
+  document.querySelectorAll('.user-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.user-form').forEach(f=>f.classList.remove('active'));
   event.target.classList.add('active');
-  document.getElementById(type + '-form').classList.add('active');
-  document.getElementById('msg').style.display = 'none';
+  document.getElementById(type+'-form').classList.add('active');
+  document.getElementById('msg').style.display='none';
 }
 
 function userRegister() {
   const user = document.getElementById('reg-user').value.trim();
   const pwd = document.getElementById('reg-pwd').value.trim();
   const pwd2 = document.getElementById('reg-pwd2').value.trim();
-  
-  if(!user || !pwd || !pwd2) {
-    showMsg('请填写完整信息', 'error');
-    return;
-  }
-  if(pwd !== pwd2) {
-    showMsg('两次密码不一致', 'error');
-    return;
-  }
-
-  let userList = JSON.parse(localStorage.getItem('carrotUsers') || '[]');
-  let exists = userList.some(item => item.username === user);
-  if(exists) {
-    showMsg('❌ 该账号已注册', 'error');
-    return;
-  }
-
-  userList.push({ username: user, password: pwd });
-  localStorage.setItem('carrotUsers', JSON.stringify(userList));
-  showMsg('✅ 注册成功！请登录', 'success');
+  if(!user||!pwd||!pwd2){showMsg('请填写完整信息','error');return;}
+  if(pwd!==pwd2){showMsg('两次密码不一致','error');return;}
+  let userList = JSON.parse(localStorage.getItem('carrotUsers')||'[]');
+  if(userList.some(i=>i.username===user)){showMsg('账号已存在','error');return;}
+  userList.push({username:user,password:pwd});
+  localStorage.setItem('carrotUsers',JSON.stringify(userList));
+  showMsg('注册成功！请登录','success');
 }
 
+// 修复登录
 function userLogin() {
   const user = document.getElementById('login-user').value.trim();
   const pwd = document.getElementById('login-pwd').value.trim();
-  
-  if(!user || !pwd) {
-    showMsg('请输入账号密码', 'error');
-    return;
-  }
-
-  let userList = JSON.parse(localStorage.getItem('carrotUsers') || '[]');
-  let target = userList.find(item => item.username === user && item.password === pwd);
-
-  if(!target) {
-    showMsg('❌ 账号或密码错误', 'error');
-    return;
-  }
-
-  // 自动登录保存
-  localStorage.setItem('autoLogin', JSON.stringify({user, pwd}));
-  
-  currentUser = user;
-  document.getElementById('show-username').innerText = user;
-  document.getElementById('user-tabs').style.display = 'none';
-  document.getElementById('login-form').style.display = 'none';
-  document.getElementById('reg-form').style.display = 'none';
-  document.getElementById('msg').style.display = 'none';
-  document.getElementById('user-page').style.display = 'block';
+  if(!user||!pwd){showMsg('请输入账号密码','error');return;}
+  let userList = JSON.parse(localStorage.getItem('carrotUsers')||'[]');
+  let target = userList.find(i=>i.username===user && i.password===pwd);
+  if(!target){showMsg('账号或密码错误','error');return;}
+  localStorage.setItem('autoLogin',JSON.stringify({user,pwd}));
+  currentUser=user;
+  document.getElementById('show-username').innerText=user;
+  document.getElementById('user-tabs').style.display='none';
+  document.getElementById('login-form').style.display='none';
+  document.getElementById('reg-form').style.display='none';
+  document.getElementById('msg').style.display='none';
+  document.getElementById('user-page').style.display='block';
 }
 
-function logout() {
-  currentUser = null;
-  localStorage.removeItem('autoLogin');
-  location.reload();
+function logout(){localStorage.removeItem('autoLogin');location.reload();}
+
+// 一键跳QQ加群
+function jumpToGroup(){
+  window.open("https://qm.qq.com/q/q8zfD0PO4b", "_blank");
 }
 
-function jumpToGroup() {
-  alert("官方QQ群：1003106744");
+function showMsg(text,type){
+  const m=document.getElementById('msg');
+  m.innerText=text;
+  m.className='msg msg-'+type;
+  m.style.display='block';
 }
+function doDownload(){if(!apkInfo){showMsg("暂无下载","error");return;}window.open(apkInfo.url,'_blank');}
 
-function showMsg(text, type) {
-  const msg = document.getElementById('msg');
-  msg.innerText = text;
-  msg.className = "msg msg-" + type;
-  msg.style.display = "block";
-}
-
-function doDownload() {
-  if(!apkInfo) { showMsg("暂无下载", "error"); return; }
-  window.open(apkInfo.url, '_blank');
-}
-
-// 自动登录
-document.addEventListener("DOMContentLoaded", function() {
-  const btn = document.getElementById('downloadBtn');
-  const data = localStorage.getItem('apkDownload');
-  if(data) {
-    apkInfo = JSON.parse(data);
-    btn.innerText = `📥 下载 ${apkInfo.name}`;
-  } else {
-    btn.innerText = "暂无下载";
-    btn.disabled = true;
-  }
-
-  // 自动登录逻辑
-  const auto = localStorage.getItem('autoLogin');
-  if(auto) {
-    const {user, pwd} = JSON.parse(auto);
-    document.getElementById('login-user').value = user;
-    document.getElementById('login-pwd').value = pwd;
-    userLogin();
-  }
+document.addEventListener("DOMContentLoaded",function(){
+  createParticles();
+  setTimeout(()=>{document.getElementById('splash').classList.add('hidden');},1600);
+  const btn=document.getElementById('downloadBtn');
+  const data=localStorage.getItem('apkDownload');
+  if(data){apkInfo=JSON.parse(data);btn.innerText=`📥 下载 ${apkInfo.name}`;}else{btn.innerText="暂无下载";btn.disabled=true;}
+  const auto=localStorage.getItem('autoLogin');
+  if(auto){const {user,pwd}=JSON.parse(auto);document.getElementById('login-user').value=user;document.getElementById('login-pwd').value=pwd;userLogin();}
 });
 </script>
 </body>
