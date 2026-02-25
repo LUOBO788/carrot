@@ -251,21 +251,6 @@ input{
   border-radius: 50%;
   background: #222;
 }
-.msg{
-  padding: 12px;
-  border-radius: 12px;
-  text-align: center;
-  margin: 10px 0;
-  display: none;
-}
-.success{
-  background: rgba(0,255,136,0.1);
-  color: #00ff88;
-}
-.error{
-  background: rgba(255,64,124,0.1);
-  color: #ff407c;
-}
 </style>
 </head>
 <body>
@@ -310,8 +295,7 @@ input{
     </div>
 
     <div class="user-btns">
-      <button class="btn" onclick="openBuyPanel()">开通会员</button>
-      <button class="btn btn-exit" onclick="logout()">退出登录</button>
+      <button class="btn" onclick="logout()">退出登录</button>
     </div>
 
     <div class="price-cards">
@@ -377,19 +361,30 @@ function createParticles(){
 function switchTab(t){
   document.querySelectorAll('.user-tab').forEach(e=>e.classList.remove('active'));
   document.querySelectorAll('.user-form').forEach(e=>e.classList.remove('active'));
-  event.target.classList.add('active');
-  document.getElementById(t+'-form').classList.add('active');
+  if(t === 'login'){
+    document.getElementById('login-form').classList.add('active');
+    document.querySelectorAll('.user-tab')[0].classList.add('active');
+  }else{
+    document.getElementById('reg-form').classList.add('active');
+    document.querySelectorAll('.user-tab')[1].classList.add('active');
+  }
 }
 
 function userRegister(){
   const u = document.getElementById('reg-user').value.trim();
   const p = document.getElementById('reg-pwd').value.trim();
   const p2 = document.getElementById('reg-pwd2').value.trim();
-  if(!u||!p||p!==p2){alert('信息不正确');return;}
-  const users = JSON.parse(localStorage.getItem('carrotUsers')||'[]');
-  if(users.some(x=>x.user===u)){alert('用户名已存在');return;}
-  users.push({user,pwd:p});
-  localStorage.setItem('carrotUsers',JSON.stringify(users));
+  if(!u || !p || p !== p2){
+    alert('请正确填写信息');
+    return;
+  }
+  let users = JSON.parse(localStorage.getItem('carrotUsers') || '[]');
+  if(users.some(item => item.user === u)){
+    alert('用户名已存在');
+    return;
+  }
+  users.push({ user: u, pwd: p });
+  localStorage.setItem('carrotUsers', JSON.stringify(users));
   alert('注册成功，请登录');
   switchTab('login');
 }
@@ -397,19 +392,22 @@ function userRegister(){
 function userLogin(){
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pwd').value.trim();
-  const users = JSON.parse(localStorage.getItem('carrotUsers')||'[]');
-  const find = users.find(x=>x.user===u&&x.pwd===p);
-  if(!find){alert('账号或密码错误');return;}
+  let users = JSON.parse(localStorage.getItem('carrotUsers') || '[]');
+  let find = users.find(item => item.user === u && item.pwd === p);
+  if(!find){
+    alert('账号或密码错误');
+    return;
+  }
   loginUser = u;
-  localStorage.setItem('loginUser',u);
+  localStorage.setItem('loginUser', u);
   showUserPage();
 }
 
 function showUserPage(){
+  document.querySelector('.user-tabs').style.display = 'none';
   document.getElementById('login-form').classList.remove('active');
   document.getElementById('reg-form').classList.remove('active');
-  document.querySelector('.user-tabs').style.display='none';
-  document.getElementById('user-page').style.display='block';
+  document.getElementById('user-page').style.display = 'block';
   document.getElementById('show-name').innerText = loginUser;
 }
 
@@ -419,7 +417,10 @@ function logout(){
 }
 
 function openBuy(type,price){
-  if(!loginUser){alert('请先登录');return;}
+  if(!loginUser){
+    alert('请先登录');
+    return;
+  }
   currentType = type;
   currentPrice = price;
   document.getElementById('showType').innerText = type;
@@ -450,11 +451,11 @@ document.getElementById('screenshot').addEventListener('change',function(e){
 function submitOrder(){
   const u = document.getElementById('order_user').value.trim();
   const t = document.getElementById('order_trail').value.trim();
-  if(!u||!t||!screenShot||!currentType){
+  if(!u || !t || !screenShot || !currentType){
     alert('请完成所有信息');
     return;
   }
-  const orders = JSON.parse(localStorage.getItem('orders')||'[]');
+  let orders = JSON.parse(localStorage.getItem('orders') || '[]');
   orders.push({
     id: Date.now(),
     user: u,
@@ -470,7 +471,7 @@ function submitOrder(){
 }
 
 function loadAgents(){
-  const list = JSON.parse(localStorage.getItem('agentList')||'[]');
+  const list = JSON.parse(localStorage.getItem('agentList') || '[]');
   const box = document.getElementById('agentList');
   box.innerHTML = '';
   list.forEach(a=>{
