@@ -569,4 +569,365 @@ section.active {
       </div>
 
       <div class="user-package">
-        <h3 class="gradie
+        <h3 class="gradient-text">我的套餐</h3>
+        <div class="package-item" id="pkg-name">当前套餐：无</div>
+        <div class="package-item">可用功能：基础功能</div>
+      </div>
+
+      <div class="user-notice">
+        <h3 class="gradient-text">官方公告</h3>
+        <div class="notice-item">📢 v1.2.0 版本已更新</div>
+        <div class="notice-item">📢 祝各位用户使用愉快</div>
+      </div>
+
+      <div class="user-links">
+        <div class="link-item" onclick="jumpToGroup()">
+          <div class="icon">🐧</div>加群
+        </div>
+        <div class="link-item" onclick="jumpToFunc()">
+          <div class="icon">📜</div>功能
+        </div>
+        <div class="link-item" onclick="jumpToAgent()">
+          <div class="icon">🤝</div>代理
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="intro">
+  <div class="container">
+    <button class="collapsible gradient-text" onclick="toggle(this)">
+      <span class="category-icon">⚔️</span> Combat
+      <span class="toggle-icon">▼</span>
+    </button>
+    <div class="content">
+      <div class="feature-list">
+        <div class="feature-item" data-icon="⭕">无痕光环</div>
+        <div class="feature-item" data-icon="🌊">激流</div>
+        <div class="feature-item" data-icon="🛡️">虚影屏障</div>
+        <div class="feature-item" data-icon="🗡️">刀刃暴击</div>
+        <div class="feature-item" data-icon="🔄">环绕</div>
+        <div class="feature-item" data-icon="☠️">自杀</div>
+        <div class="feature-item" data-icon="🤡">自嘲</div>
+        <div class="feature-item" data-icon="🖱️">自动点击</div>
+        <div class="feature-item" data-icon="📏">碰撞箱</div>
+        <div class="feature-item" data-icon="🛡️">反击退</div>
+        <div class="feature-item" data-icon="🔨">刀刃重锤</div>
+        <div class="feature-item" data-icon="👤">背后跟随</div>
+        <div class="feature-item" data-icon="☠️">杀戮光环</div>
+      </div>
+    </div>
+
+    <button class="collapsible gradient-text" onclick="toggle(this)">
+      <span class="category-icon">🏃</span> Movement
+      <span class="toggle-icon">▼</span>
+    </button>
+    <div class="content">
+      <div class="feature-list">
+        <div class="feature-item" data-icon="🛑">快速停止</div>
+        <div class="feature-item" data-icon="🦘">高跳</div>
+        <div class="feature-item" data-icon="🚀">无减速</div>
+        <div class="feature-item" data-icon="☁️">静空</div>
+        <div class="feature-item" data-icon="✈️">平飞</div>
+        <div class="feature-item" data-icon="⬆️">自动突起</div>
+        <div class="feature-item" data-icon="🌪️">飞行</div>
+        <div class="feature-item" data-icon="🦔">无下坠伤害</div>
+        <div class="feature-item" data-icon="🕸️">反蜘蛛网</div>
+        <div class="feature-item" data-icon="👥">跟随玩家</div>
+        <div class="feature-item" data-icon="🎒">背包移动</div>
+        <div class="feature-item" data-icon="⬇️">虚空回弹</div>
+        <div class="feature-item" data-icon="🏊">空气游泳</div>
+        <div class="feature-item" data-icon="⚡">玩家速度</div>
+        <div class="feature-item" data-icon="🦘">远跳</div>
+      </div>
+    </div>
+
+    <button class="collapsible gradient-text" onclick="toggle(this)">
+      <span class="category-icon">👤</span> Player
+      <span class="toggle-icon">▼</span>
+    </button>
+    <div class="content">
+      <div class="feature-list">
+        <div class="feature-item" data-icon="💥">范围破坏</div>
+        <div class="feature-item" data-icon="📍">点击传送</div>
+        <div class="feature-item" data-icon="⏱️">世界速度</div>
+        <div class="feature-item" data-icon="🧱">搭路</div>
+        <div class="feature-item" data-icon="🚫">反踢出</div>
+        <div class="feature-item" data-icon="⛏️">自动破坏</div>
+        <div class="feature-item" data-icon="💣">崩溃服务器</div>
+        <div class="feature-item" data-icon="👆">点击破坏</div>
+        <div class="feature-item" data-icon="🚀">飞船</div>
+        <div class="feature-item" data-icon="💰">箱子小偷</div>
+        <div class="feature-item" data-icon="⭕">箱子光环</div>
+        <div class="feature-item" data-icon="🛡️">反侵入</div>
+        <div class="feature-item" data-icon="📏">方块距离</div>
+        <div class="feature-item" data-icon="🧹">背包整理</div>
+      </div>
+    </div>
+
+    <button class="collapsible gradient-text" onclick="toggle(this)">
+      <span class="category-icon">📦</span> Misc
+      <span class="toggle-icon">▼</span>
+    </button>
+    <div class="content">
+      <div class="feature-list">
+        <div class="feature-item" data-icon="💬">自动发言</div>
+        <div class="feature-item" data-icon="👋">玩家踢出</div>
+        <div class="feature-item" data-icon="⏹️">停止发包</div>
+        <div class="feature-item" data-icon="🛡️">无敌模式</div>
+        <div class="feature-item" data-icon="🏪">远程商店</div>
+        <div class="feature-item" data-icon="🤖">智能队友</div>
+        <div class="feature-item" data-icon="🐎">生成坐骑</div>
+        <div class="feature-item" data-icon="💣">崩溃器</div>
+        <div class="feature-item" data-icon="🔁">重复发包</div>
+        <div class="feature-item" data-icon="🎥">自由摄像机</div>
+        <div class="feature-item" data-icon="🕒">延迟发包</div>
+        <div class="feature-item" data-icon="🛒">快速进货</div>
+      </div>
+    </div>
+
+    <button class="collapsible gradient-text" onclick="toggle(this)">
+      <span class="category-icon">🎨</span> Visual
+      <span class="toggle-icon">▼</span>
+    </button>
+    <div class="content">
+      <div class="feature-list">
+        <div class="feature-item" data-icon="🔍">绘制选中</div>
+        <div class="feature-item" data-icon="✨">粒子光环</div>
+        <div class="feature-item" data-icon="📋">数组列表</div>
+        <div class="feature-item" data-icon="🎥">摄像机</div>
+        <div class="feature-item" data-icon="🌈">色彩校正</div>
+        <div class="feature-item" data-icon="⭕">绘制范围</div>
+        <div class="feature-item" data-icon="🌙">夜视</div>
+        <div class="feature-item" data-icon="✋">手部动画</div>
+        <div class="feature-item" data-icon="📍">强制显示坐标</div>
+        <div class="feature-item" data-icon="📈">实体连线</div>
+        <div class="feature-item" data-icon="🐢">缓慢挥手</div>
+        <div class="feature-item" data-icon="🔍">放大镜</div>
+        <div class="feature-item" data-icon="🌊">平滑挥手</div>
+        <div class="feature-item" data-icon="🌤️">天气颜色</div>
+        <div class="feature-item" data-icon="📦">箱子绘制</div>
+        <div class="feature-item" data-icon="🐮">神奇牛光环</div>
+        <div class="feature-item" data-icon="🌀">大陀螺</div>
+        <div class="feature-item" data-icon="⭕">绘制光环</div>
+        <div class="feature-item" data-icon="ℹ️">水印</div>
+        <div class="feature-item" data-icon="👤">实体绘制</div>
+        <div class="feature-item" data-icon="🇨🇳">中文模式</div>
+        <div class="feature-item" data-icon="🌫️">雾</div>
+        <div class="feature-item" data-icon="☀️">世界光</div>
+        <div class="feature-item" data-icon="💥">攻击效果</div>
+        <div class="feature-item" data-icon="⚡">速度提示</div>
+        <div class="feature-item" data-icon="🗺️">绘制路线</div>
+        <div class="feature-item" data-icon="💥">视觉秒杀</div>
+        <div class="feature-item" data-icon="⭕">移动光环</div>
+        <div class="feature-item" data-icon="⛏️">矿透</div>
+        <div class="feature-item" data-icon="👁️">景深</div>
+        <div class="feature-item" data-icon="✅">无抖动</div>
+      </div>
+    </div>
+
+    <div class="section-box">
+      <h2 class="gradient-text">选择方案</h2>
+      <div class="price-cards">
+        <div class="price-card"><h3 class="gradient-text">周卡</h3><div class="price">￥12</div></div>
+        <div class="price-card"><h3 class="gradient-text">月卡</h3><div class="price">￥25</div></div>
+        <div class="price-card"><h3 class="gradient-text">季卡</h3><div class="price">￥36</div></div>
+        <div class="price-card"><h3 class="gradient-text">年卡</h3><div class="price">￥50</div></div>
+        <div class="price-card"><h3 class="gradient-text">永久卡</h3><div class="price">￥65</div></div>
+      </div>
+    </div>
+
+    <div class="section-box">
+      <h2 class="gradient-text">官方群聊</h2>
+      <div class="group-info">🐧 1003106744</div>
+    </div>
+
+    <div class="section-box">
+      <h2 class="gradient-text">代理</h2>
+      <p class="agent-info">敬请期待，暂未开放</p>
+    </div>
+
+    <div class="disclaimer">
+      ⚠️ <strong>免责声明</strong><br>
+      本工具仅用于<strong>单人游戏、离线模式或私人服务器测试</strong>，旨在提升单机游戏体验。<br>
+      使用者需严格遵守《Minecraft》用户协议及各服务器规则，<strong>严禁在公共服务器、联机对战中使用</strong>。<br>
+      因违规使用导致账号封禁、设备异常或法律责任，均由使用者自行承担，开发者与本站不承担任何责任。
+    </div>
+  </div>
+</section>
+
+<div class="update">
+  <h2 class="gradient-text">最新版本：v1.2.0</h2>
+  <p>✅ 新增用户中心系统</p>
+  <p>✅ 优化界面布局与交互</p>
+  <p>✅ 修复兼容问题</p>
+  <br>
+  <a href="#" class="link">查看完整更新日志</a>
+</div>
+
+<div class="footer">© 2026 Carrot Team | MIT 开源协议</div>
+
+<script>
+var currentUser = "";
+
+// 顶部标签切换
+function showTab(id) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(id).classList.add('active');
+}
+
+// 折叠面板
+function toggle(el) {
+  el.classList.toggle('active');
+  const c = el.nextElementSibling;
+  c.style.maxHeight = c.style.maxHeight ? null : c.scrollHeight + 'px';
+}
+
+// 登录/注册切换
+function switchForm(type) {
+  document.querySelectorAll('.user-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.user-form').forEach(f => f.classList.remove('active'));
+  event.target.classList.add('active');
+  document.getElementById(type + '-form').classList.add('active');
+  document.getElementById('msg').style.display = 'none';
+}
+
+// 注册（保存账号密码到本地）
+function userRegister() {
+  const user = document.getElementById('reg-user').value.trim();
+  const pwd = document.getElementById('reg-pwd').value.trim();
+  const pwd2 = document.getElementById('reg-pwd2').value.trim();
+  
+  if(!user || !pwd || !pwd2) {
+    showMsg('请填写完整信息', 'error');
+    return;
+  }
+  if(pwd !== pwd2) {
+    showMsg('两次密码不一致', 'error');
+    return;
+  }
+
+  // 读取本地账号列表
+  let userList = JSON.parse(localStorage.getItem('carrotUsers') || '[]');
+  
+  // 判断账号是否已存在
+  let exists = userList.some(item => item.username === user);
+  if(exists) {
+    showMsg('❌ 该账号已注册', 'error');
+    return;
+  }
+
+  // 保存账号
+  userList.push({ username: user, password: pwd });
+  localStorage.setItem('carrotUsers', JSON.stringify(userList));
+
+  showMsg('✅ 注册成功！请去登录', 'success');
+  document.getElementById('reg-user').value = '';
+  document.getElementById('reg-pwd').value = '';
+  document.getElementById('reg-pwd2').value = '';
+}
+
+// 登录（校验是否注册过）
+function userLogin() {
+  const user = document.getElementById('login-user').value.trim();
+  const pwd = document.getElementById('login-pwd').value.trim();
+  
+  if(!user || !pwd) {
+    showMsg('请输入账号密码', 'error');
+    return;
+  }
+
+  // 读取本地账号
+  let userList = JSON.parse(localStorage.getItem('carrotUsers') || '[]');
+  let target = userList.find(item => item.username === user && item.password === pwd);
+
+  if(!target) {
+    showMsg('❌ 账号不存在或密码错误', 'error');
+    return;
+  }
+
+  // 登录成功
+  currentUser = user;
+  document.getElementById('show-username').innerText = user;
+  document.getElementById('user-tabs').style.display = 'none';
+  document.getElementById('login-form').style.display = 'none';
+  document.getElementById('reg-form').style.display = 'none';
+  document.getElementById('msg').style.display = 'none';
+  document.getElementById('user-page').style.display = 'block';
+}
+
+// 退出登录
+function logout() {
+  currentUser = "";
+  document.getElementById('user-tabs').style.display = 'flex';
+  document.getElementById('login-form').style.display = 'block';
+  document.getElementById('user-page').style.display = 'none';
+  document.querySelectorAll('.user-tab')[0].classList.add('active');
+  
+  // 重置会员信息
+  document.getElementById('vip-level').innerText = "普通用户";
+  document.getElementById('vip-expire').innerText = "会员到期：未开通";
+  document.getElementById('pkg-name').innerText = "当前套餐：无";
+}
+
+// 卡密兑换
+function exchangeCard() {
+  const card = prompt("请输入卡密：");
+  if(!card) return;
+  if(card.includes("周卡")) {
+    document.getElementById('vip-level').innerText = "周卡会员";
+    document.getElementById('vip-expire').innerText = "会员到期：7天后";
+    document.getElementById('pkg-name').innerText = "当前套餐：周卡会员";
+  } else if(card.includes("月卡")) {
+    document.getElementById('vip-level').innerText = "月卡会员";
+    document.getElementById('vip-expire').innerText = "会员到期：30天后";
+    document.getElementById('pkg-name').innerText = "当前套餐：月卡会员";
+  } else if(card.includes("季卡")) {
+    document.getElementById('vip-level').innerText = "季卡会员";
+    document.getElementById('vip-expire').innerText = "会员到期：90天后";
+    document.getElementById('pkg-name').innerText = "当前套餐：季卡会员";
+  } else if(card.includes("年卡")) {
+    document.getElementById('vip-level').innerText = "年卡会员";
+    document.getElementById('vip-expire').innerText = "会员到期：365天后";
+    document.getElementById('pkg-name').innerText = "当前套餐：年卡会员";
+  } else if(card.includes("永久")) {
+    document.getElementById('vip-level').innerText = "永久会员";
+    document.getElementById('vip-expire').innerText = "会员到期：永久有效";
+    document.getElementById('pkg-name').innerText = "当前套餐：永久会员";
+  } else {
+    showMsg("❌ 卡密错误！", "error");
+    return;
+  }
+  showMsg("✅ 兑换成功！", "success");
+}
+
+// 跳转
+function jumpToGroup() {
+  showTab('intro');
+  setTimeout(() => alert("官方QQ群：1003106744"), 300);
+}
+function jumpToFunc() { showTab('intro'); }
+function jumpToAgent() {
+  showTab('intro');
+  setTimeout(() => alert("代理功能即将开放！"), 300);
+}
+
+// 提示消息
+function showMsg(text, type) {
+  const msg = document.getElementById('msg');
+  msg.innerText = text;
+  msg.className = "msg msg-" + type;
+  msg.style.display = "block";
+}
+
+// 默认展开第一个折叠
+document.addEventListener("DOMContentLoaded", function() {
+  const first = document.querySelector('.collapsible');
+  if(first) toggle(first);
+});
+</script>
+</body>
+</html>
