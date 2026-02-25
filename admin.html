@@ -150,18 +150,25 @@ input,textarea,select{
 </div>
 
 <script>
-const ADMIN_USER = "LUOBO";
-const ADMIN_PWD = "tianniWZ1030LJH";
+// 管理员账号列表（保留原账号，新增WHZ账号）
+const ADMIN_LIST = [
+  { user: "LUOBO", pwd: "tianniWZ1030LJH" },
+  { user: "WHZ", pwd: "WHZ 830409" }
+];
 let currentOrderTab = 'pending';
 
-// 登录
+// 登录（修改为支持多账号验证）
 function login(){
   const u = document.getElementById('user').value;
   const p = document.getElementById('pwd').value;
-  if(u === ADMIN_USER && p === ADMIN_PWD){
+  // 查找是否匹配任意一个管理员账号
+  const isAdmin = ADMIN_LIST.some(admin => admin.user === u && admin.pwd === p);
+  if(isAdmin){
     localStorage.setItem('admin','ok');
     location.reload();
-  }else{alert('账号或密码错误');}
+  }else{
+    alert('账号或密码错误');
+  }
 }
 
 function logout(){
@@ -207,7 +214,7 @@ function addCards(){
 function loadCardCount(){
   const t = document.getElementById('ctype').value;
   const c = JSON.parse(localStorage.getItem('card_'+t)||'[]').length;
-  document.getElementById('cardCount').innerText = `📦 ${type} 库存：${c} 个`;
+  document.getElementById('cardCount').innerText = `📦 ${t} 库存：${c} 个`;
 }
 
 // 代理
