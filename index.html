@@ -161,7 +161,7 @@ body {
 .package-item,.notice-item {font-size:14px;color:var(--light-text);padding:4px 0;}
 
 .user-links {display:flex;gap:12px;margin-bottom:26px;}
-.link-item {flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:16px 8px;text-align:center;font-size:12px;}
+.link-item {flex:1;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.05);border-radius:14px;padding:16px 8px;text-align:center;font-size:12px;cursor:pointer;}
 .link-item .icon {font-size:22px;margin-bottom:6px;color:var(--blue);}
 
 .collapse-box {margin-bottom:10px;}
@@ -182,7 +182,7 @@ body {
 
 .agent-section {margin:30px 0;}
 .agent-list {display:flex;flex-direction:column;gap:12px;}
-.agent-item {background:rgba(20,23,32,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;}
+.agent-item {background:rgba(20,23,32,0.6);border:1px solid rgba(255,255,255,0.05);border-radius:16px;padding:16px;display:flex;align-items:center;gap:14px;cursor:pointer;}
 .agent-avatar {width:50px;height:50px;border-radius:50%;object-fit:cover;background:#111;}
 .agent-info {flex:1;}
 .agent-name {font-size:16px;font-weight:bold;color:var(--text);}
@@ -286,8 +286,8 @@ body {
       <div class="link-item" onclick="jumpToGroup()">
         <div class="icon">🐧</div>官方群
       </div>
-      <div class="link-item" style="opacity:0.6;pointer-events:none;">
-        <div class="icon">🔗</div>代理<br><small>未开放</small>
+      <div class="link-item" onclick="alert('已有官方代理，联系上方代理即可购买')">
+        <div class="icon">🔗</div>代理
       </div>
     </div>
 
@@ -512,7 +512,7 @@ function createParticles() {
     p.appendChild(dot);
   }
   let s = document.createElement('style');
-  s.innerHTML = '@keyframes float{0%{transform:translateY(0,0);}50%{transform:translateY(10px,10px);}100%{transform:translateY(0,0);}}';
+  s.innerHTML = '@keyframes float{0%{transform:translate(0,0);}50%{transform:translate(10px,10px);}100%{transform:translate(0,0);}}';
   document.head.appendChild(s);
 }
 
@@ -572,9 +572,16 @@ function userLogin() {
 
 function logout(){localStorage.removeItem('autoLogin');location.reload();}
 function jumpToGroup(){window.open("mqqapi://card/show_pslcard?src_type=internal&version=1&uin=1003106744&card_type=group&source=qrcode", "_blank");}
-function doDownload(){alert('请在后台设置下载链接');}
 
-// 加载代理
+// 修复下载按钮
+function doDownload(){
+  const apk = localStorage.getItem('apkDownload');
+  if(!apk){alert('请联系管理员上传下载链接');return;}
+  const data = JSON.parse(apk);
+  window.open(data.url, '_blank');
+}
+
+// 加载代理 + 点击跳QQ加好友
 function loadAgents(){
   const list = JSON.parse(localStorage.getItem('agentList')||'[]');
   const box = document.getElementById('agentList');
@@ -582,6 +589,9 @@ function loadAgents(){
   list.forEach(agent => {
     const item = document.createElement('div');
     item.className = 'agent-item';
+    item.onclick = ()=>{
+      window.open(`http://wpa.qq.com/msgrd?v=3&uin=${agent.qq}&site=qq&menu=yes`, '_blank');
+    };
     item.innerHTML = `
       <img class="agent-avatar" src="https://q1.qlogo.cn/g?b=qq&nk=${agent.qq}&s=640" alt="头像">
       <div class="agent-info">
