@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carrot - Minecraft 辅助模块</title>
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #000000;
+  --card: #121212;
+  --text: #e0e6ff;
+  --light-text: #a0b0d0;
+  --border: #223;
+  --accent: #00ccff;
+}
+
+body {
+  font-family: 'Segoe UI', Roboto, 'Microsoft YaHei', sans-serif;
+  background: linear-gradient(to bottom, #101010, #000);
+  color: var(--text);
+  line-height: 1.8;
+  min-height: 100vh;
+  padding-bottom: 40px;
+}
+
+.gradient-text {
+  font-weight: bold;
+  background: linear-gradient(90deg, #00f0ff, #0088ff, #8800ff, #00f0ff);
+  background-size: 300% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradientFlow 6s linear infinite;
+}
+
+@keyframes gradientFlow {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 300% 50%; }
+}
+
+.nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.85);
+  backdrop-filter: blur(10px);
+  padding: 14px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 22px;
+}
+
+.tab-bar {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 20px;
+  margin-top: 70px;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 8px 16px;
+  background: #1a1a1a;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.tab.active {
+  background: #0088ff;
+  color: #fff;
+  font-weight: bold;
+}
+
+.hero {
+  padding: 20px 20px 30px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 26px;
+  margin-bottom: 10px;
+}
+
+.hero p {
+  color: var(--light-text);
+  margin-bottom: 20px;
+  font-size: 15px;
+}
+
+.buttons {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn {
+  padding: 12px 24px;
+  border-radius: 8px;
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.btn-gradient {
+  background: linear-gradient(90deg, #00f0ff, #0088ff);
+  color: #fff;
+  font-weight: bold;
+}
+
+.btn:hover {
+  transform: scale(1.05);
+}
+
+section {
+  display: none;
+  padding: 0 20px;
+}
+
+section.active {
+  display: block;
+}
+
+.user-center {
+  max-width: 400px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.user-tabs {
+  display: flex;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #151515;
+}
+
+.user-tab {
+  flex: 1;
+  padding: 12px;
+  text-align: center;
+  background: #151515;
+  color: var(--light-text);
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.user-tab.active {
+  background: #0088ff;
+  color: #fff;
+}
+
+.user-form {
+  display: none;
+}
+
+.user-form.active {
+  display: block;
+}
+
+.user-form input {
+  width: 100%;
+  padding: 14px 16px;
+  margin-bottom: 14px;
+  background: #181818;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+}
+
+.user-form input:focus {
+  border-color: #0088ff;
+}
+
+.user-form .submit-btn {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  background: linear-gradient(90deg, #00f0ff, #0088ff);
+  color: #fff;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  margin-top: 6px;
+}
+
+.user-logined {
+  display: none;
+}
+
+.user-card {
+  background: #151515;
+  border-radius: 14px;
+  padding: 24px;
+  text-align: center;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+
+.user-avatar {
+  width: 70px;
+  height: 70px;
+  background: linear-gradient(90deg, #00f0ff, #0088ff);
+  border-radius: 50%;
+  margin: 0 auto 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+}
+
+.user-name {
+  font-size: 20px;
+  font-weight: bold;
+  margin-bottom: 6px;
+}
+
+.user-vip {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #003355;
+  color: #00d0ff;
+  border-radius: 12px;
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.user-expire {
+  font-size: 13px;
+  color: var(--light-text);
+}
+
+.user-btns {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 24px;
+}
+
+.user-btns .btn {
+  flex: 1;
+  padding: 12px 0;
+  font-size: 14px;
+}
+
+.btn-exit {
+  background: #440000;
+  color: #ff6666;
+  border: 1px solid #660000;
+}
+
+.user-package {
+  background: #151515;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+
+.user-package h3 {
+  font-size: 16px;
+  margin-bottom: 12px;
+  text-align: left;
+}
+
+.package-item {
+  font-size: 14px;
+  color: var(--light-text);
+  padding: 6px 0;
+}
+
+.user-notice {
+  background: #151515;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
+  border: 1px solid var(--border);
+}
+
+.user-notice h3 {
+  font-size: 16px;
+  margin-bottom: 10px;
+  text-align: left;
+}
+
+.notice-item {
+  font-size: 13px;
+  color: var(--light-text);
+  padding: 4px 0;
+}
+
+.user-links {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  text-align: center;
+}
+
+.link-item {
+  background: #151515;
+  border-radius: 10px;
+  padding: 14px 8px;
+  font-size: 12px;
+  border: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.link-item .icon {
+  font-size: 20px;
+  margin-bottom: 6px;
+}
+
+.msg {
+  padding: 12px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  text-align: center;
+  display: none;
+}
+
+.msg-success {
+  background: #004422;
+  color: #00ff88;
+  border: 1px solid #006633;
+}
+
+.msg-error {
+  background: #440000;
+  color: #ff6666;
+  border: 1px solid #660000;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.collapsible {
+  background: var(--card);
+  cursor: pointer;
+  padding: 16px 20px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  outline: none;
+  font-size: 18px;
+  font-weight: bold;
+  border-radius: 10px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border: 1px solid var(--border);
+  color: var(--text);
+}
+
+.collapsible .category-icon {
+  font-size: 22px;
+  margin-right: 12px;
+}
+
+.collapsible .toggle-icon {
+  color: #00ccff;
+  transition: transform 0.3s;
+}
+
+.collapsible.active .toggle-icon {
+  transform: rotate(180deg);
+}
+
+.content {
+  padding: 0 20px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  background: #181818;
+  border-radius: 0 0 10px;
+  margin-top: -8px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+  border-top: none;
+}
+
+.feature-list {
+  padding: 16px 0;
+  columns: 1;
+}
+
+@media (min-width: 600px) {
+  .feature-list {
+    columns: 2;
+  }
+}
+
+.feature-item {
+  padding: 4px 0;
+  font-size: 14px;
+  color: var(--light-text);
+  break-inside: avoid;
+}
+
+.feature-item::before {
+  content: attr(data-icon);
+  margin-right: 8px;
+  color: #00ccff;
+  opacity: 0.8;
+}
+
+.section-box {
+  margin: 40px 0;
+  text-align: center;
+}
+
+.section-box h2 {
+  font-size: 20px;
+  margin-bottom: 20px;
+}
+
+.price-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.price-card {
+  background: #151515;
+  padding: 20px 10px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+}
+
+.price {
+  font-size: 18px;
+  color: #00eeff;
+  font-weight: bold;
+}
+
+.group-info {
+  font-size: 17px;
+  padding: 20px 0;
+  color: var(--text);
+}
+
+.group-info span {
+  color: #00ddff;
+  font-size: 19px;
+  font-weight: bold;
+}
+
+.agent-info {
+  color: var(--light-text);
+  font-size: 15px;
+}
+
+.update {
+  padding: 30px 20px;
+  text-align: center;
+  background: var(--card);
+  margin: 20px;
+  border-radius: 10px;
+}
+
+.link {
+  color: #00aaee;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.disclaimer {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 16px;
+  background: #1a1a1a;
+  border-left: 4px solid #0088ff;
+  border-radius: 8px;
+  font-size: 13px;
+  color: #ccd6f6;
+  line-height: 1.6;
+}
+
+.footer {
+  padding: 25px 20px;
+  text-align: center;
+  background: #0a0a0a;
+  color: #668;
+  font-size: 14px;
+  margin-top: 20px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="nav">
+  <div class="logo gradient-text">🥕 Carrot</div>
+</div>
+
+<div class="tab-bar">
+  <div class="tab active" onclick="showTab('user')">用户中心</div>
+  <div class="tab" onclick="showTab('intro')">简介</div>
+</div>
+
+<div class="hero">
+  <h1 class="gradient-text">让生存更简单，让创造更自由</h1>
+  <p>轻量级、开源、安全的 Minecraft 辅助模块</p>
+  <div class="buttons">
+    <button class="btn btn-gradient">立即下载</button>
+    <button class="btn btn-secondary">查看文档</button>
+  </div>
+</div>
+
+<section id="user" class="active">
+  <div class="user-center">
+    <div class="user-tabs" id="user-tabs">
+      <div class="user-tab active" onclick="switchForm('login')">登录</div>
+      <div class="user-tab" onclick="switchForm('reg')">注册</div>
+    </div>
+
+    <div id="msg" class="msg"></div>
+
+    <div id="login-form" class="user-form active">
+      <input type="text" id="login-user" placeholder="请输入用户名">
+      <input type="password" id="login-pwd" placeholder="请输入密码">
+      <button class="submit-btn" onclick="userLogin()">立即登录</button>
+    </div>
+
+    <div id="reg-form" class="user-form">
+      <input type="text" id="reg-user" placeholder="请输入用户名">
+      <input type="password" id="reg-pwd" placeholder="请输入密码">
+      <input type="password" id="reg-pwd2" placeholder="请确认密码">
+      <button class="submit-btn" onclick="userRegister()">立即注册</button>
+    </div>
+
+    <div id="user-page" class="user-logined">
+      <div class="user-card">
+        <div class="user-avatar">🥕</div>
+        <div class="user-name gradient-text" id="show-username">Carrot用户</div>
+        <div class="user-vip" id="vip-level">普通用户</div>
+        <div class="user-expire" id="vip-expire">会员到期：未开通</div>
+      </div>
+
+      <div class="user-btns">
+        <button class="btn btn-gradient" onclick="showMsg('📥 下载已开始！')">📥 下载</button>
+        <button class="btn btn-gradient" onclick="exchangeCard()">🔑 卡密兑换</button>
+        <button class="btn btn-exit" onclick="logout()">🚪 退出</button>
+      </div>
+
+      <div class="user-package">
+        <h3 class="gradie
