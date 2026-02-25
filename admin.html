@@ -47,8 +47,33 @@ input.apk-input {width:100%;padding:14px;background:rgba(255,255,255,0.05);borde
 .current-info {background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;margin-top:10px;font-size:13px;color:var(--light-text);}
 .agent-input {width:100%;padding:14px;margin-bottom:10px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;color:var(--text);}
 .card-input {width:100%;padding:14px;margin-bottom:10px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;color:var(--text);}
-.qr-preview {width:120px;height:120px;background:#222;border-radius:10px;margin:10px 0;}
-.qr-preview img {width:100%;height:100%;object-fit:contain;border-radius:10px;}
+
+.qr-upload {
+  background:rgba(255,255,255,0.05);
+  border:2px dashed #444;
+  border-radius:12px;
+  padding:20px;
+  text-align:center;
+  cursor:pointer;
+  margin-bottom:10px;
+}
+.qr-upload:hover {border-color:var(--blue);}
+.qr-preview {
+  width:160px;
+  height:160px;
+  background:#111;
+  border-radius:12px;
+  margin:10px auto;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.qr-preview img {
+  max-width:100%;
+  max-height:100%;
+  border-radius:10px;
+}
+.upload-input {display:none;}
 </style>
 </head>
 <body>
@@ -68,12 +93,15 @@ input.apk-input {width:100%;padding:14px;background:rgba(255,255,255,0.05);borde
   <div class="admin-section" id="adminPanel">
     <h2 class="gradient-text section-title">控制面板</h2>
 
-    <!-- 收款码设置 -->
+    <!-- 收款码 本地上传 -->
     <div class="card">
       <h3 class="gradient-text">收款码设置</h3>
-      <input class="agent-input" id="payQrInput" placeholder="收款码图片链接（base64或URL）">
-      <button class="save-btn" onclick="savePayQr()">保存收款码</button>
+      <label class="qr-upload" id="qrUploadLabel">
+        <p>点击上传收款码图片</p>
+        <input type="file" id="qrFile" class="upload-input" accept="image/*">
+      </label>
       <div class="qr-preview" id="qrPreview"></div>
+      <button class="save-btn" onclick="savePayQr()">保存收款码</button>
     </div>
 
     <!-- 卡密管理 -->
@@ -149,6 +177,7 @@ function createParticles(){
 const ADMIN_USER = "LUOBO";
 const ADMIN_PWD = "tianniWZ1030LJH";
 
+// 登录
 function adminLogin(){
   const u=document.getElementById('adminUser').value.trim();
   const p=document.getElementById('adminPwd').value.trim();
@@ -168,8 +197,12 @@ function showAdmin(){
   loadPayQr();
 }
 
-function adminLogout(){localStorage.removeItem('adminLogin');location.reload();}
+function adminLogout(){
+  localStorage.removeItem('adminLogin');
+  location.reload();
+}
 
+// 用户列表
 function loadUserList(){
   const list=JSON.parse(localStorage.getItem('carrotUsers')||'[]');
   const b=document.getElementById('userList');
@@ -181,7 +214,7 @@ function loadUserList(){
   });
 }
 
-// 代理管理
+// 代理
 function addAgent(){
   const name = document.getElementById('agentName').value.trim();
   const qq = document.getElementById('agentQQ').value.trim();
@@ -221,7 +254,7 @@ function loadAgentsForAdmin(){
   });
 }
 
-// 卡密管理
+// 卡密
 function addCards(){
   const type = document.getElementById('cardType').value;
   const cards = document.getElementById('cardList').value.trim().split('\n').filter(c=>c.trim()!=='');
@@ -243,23 +276,41 @@ function loadCardCount(){
   document.getElementById('cardCount').innerText = `${type}剩余卡密：${cards.length} 个`;
 }
 
-// 收款码设置
-function savePayQr(){
-  const qr = document.getElementById('payQrInput').value.trim();
-  localStorage.setItem('payQr', qr);
-  loadPayQr();
-  alert('收款码已保存');
+// ====================== 收款码 本地上传 ======================
+const qrFile = document.getElementById('qrFile');
+let tempQrBase64 = '';
+
+qrFile.addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if(!file) return;
+  const reader = new FileReader();
+  reader.onload = function(ev) {
+    tempQrBase64 = ev.target.result;
+    document.getElementById('qrPreview').innerHTML = `<img src="${tempQrBase64}">`;
+  };
+  reader.readAsDataURL(file);
+});
+
+document.getElementById('qrUploadLabel').onclick = function() {
+  qrFile.click();
+};
+
+function savePayQr() {
+  if(!tempQrBase64) {
+    alert('请先上传收款码图片');
+    return;
+  }
+  localStorage.setItem('payQr', tempQrBase64);
+  alert('✅ 收款码已保存，用户购买时自动显示');
 }
 
-function loadPayQr(){
-  const qr = localStorage.getItem('payQr') || '';
-  const preview = document.getElementById('qrPreview');
+function loadPayQr() {
+  const qr = localStorage.getItem('payQr');
   if(qr) {
-    preview.innerHTML = `<img src="${qr}" alt="收款码">`;
-  } else {
-    preview.innerHTML = '<p style="color:var(--light-text);font-size:12px;">未设置收款码</p>';
+    document.getElementById('qrPreview').innerHTML = `<img src="${qr}">`;
   }
 }
+// ============================================================
 
 function showMsg(id,text,type){
   const m=document.getElementById(id);
@@ -269,11 +320,18 @@ function showMsg(id,text,type){
   setTimeout(()=>m.style.display='none',2000);
 }
 
-function saveNotice(){localStorage.setItem('carrotNotice',document.getElementById('noticeText').value);alert("✅ 公告已同步");}
+function saveNotice(){
+  localStorage.setItem('carrotNotice',document.getElementById('noticeText').value);
+  alert("✅ 公告已同步");
+}
+
 function saveApk(){
   const u=document.getElementById('apkUrl').value.trim();
   const n=document.getElementById('apkName').value.trim();
-  if(!u||!n){showMsg('apkStatus','请填写完整','error');return;}
+  if(!u||!n){
+    showMsg('apkStatus','请填写完整','error');
+    return;
+  }
   localStorage.setItem('apkDownload',JSON.stringify({url:u,name:n}));
   showMsg('apkStatus','✅ 已同步到主站','success');
 }
