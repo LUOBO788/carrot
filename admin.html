@@ -46,6 +46,9 @@ input.apk-input {width:100%;padding:14px;background:rgba(255,255,255,0.05);borde
 .msg-error {background:rgba(255,64,124,0.08);color:#ff407c;border:1px solid rgba(255,64,124,0.1);}
 .current-info {background:rgba(255,255,255,0.03);border-radius:12px;padding:12px;margin-top:10px;font-size:13px;color:var(--light-text);}
 .agent-input {width:100%;padding:14px;margin-bottom:10px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;color:var(--text);}
+.card-input {width:100%;padding:14px;margin-bottom:10px;background:rgba(255,255,255,0.05);border:1px solid var(--border);border-radius:12px;color:var(--text);}
+.qr-preview {width:120px;height:120px;background:#222;border-radius:10px;margin:10px 0;}
+.qr-preview img {width:100%;height:100%;object-fit:contain;border-radius:10px;}
 </style>
 </head>
 <body>
@@ -65,6 +68,29 @@ input.apk-input {width:100%;padding:14px;background:rgba(255,255,255,0.05);borde
   <div class="admin-section" id="adminPanel">
     <h2 class="gradient-text section-title">控制面板</h2>
 
+    <!-- 收款码设置 -->
+    <div class="card">
+      <h3 class="gradient-text">收款码设置</h3>
+      <input class="agent-input" id="payQrInput" placeholder="收款码图片链接（base64或URL）">
+      <button class="save-btn" onclick="savePayQr()">保存收款码</button>
+      <div class="qr-preview" id="qrPreview"></div>
+    </div>
+
+    <!-- 卡密管理 -->
+    <div class="card">
+      <h3 class="gradient-text">卡密管理</h3>
+      <select class="card-input" id="cardType">
+        <option value="周卡">周卡</option>
+        <option value="月卡">月卡</option>
+        <option value="季卡">季卡</option>
+        <option value="永久">永久</option>
+      </select>
+      <textarea class="card-input" id="cardList" placeholder="每行一个卡密，批量添加" rows="4"></textarea>
+      <button class="save-btn" onclick="addCards()">添加卡密</button>
+      <div id="cardCount" style="margin-top:10px;font-size:14px;color:var(--light-text);"></div>
+    </div>
+
+    <!-- 代理管理 -->
     <div class="card">
       <h3 class="gradient-text">添加代理</h3>
       <input class="agent-input" id="agentName" placeholder="代理名称">
@@ -78,7 +104,7 @@ input.apk-input {width:100%;padding:14px;background:rgba(255,255,255,0.05);borde
     </div>
 
     <div class="card">
-      <h3 class="gradient-text">代理列表</h3>
+      <h3 class="gradient-text">代理列表（点击删除）</h3>
       <div id="agentAdminList" style="font-size:14px;color:var(--light-text);"></div>
     </div>
 
@@ -138,6 +164,8 @@ function showAdmin(){
   document.getElementById('logoutBtn').style.display="block";
   loadUserList();
   loadAgentsForAdmin();
+  loadCardCount();
+  loadPayQr();
 }
 
 function adminLogout(){localStorage.removeItem('adminLogin');location.reload();}
@@ -171,6 +199,14 @@ function addAgent(){
   loadAgentsForAdmin();
 }
 
+function deleteAgent(index){
+  if(!confirm('确定删除该代理？')) return;
+  const list = JSON.parse(localStorage.getItem('agentList')||'[]');
+  list.splice(index,1);
+  localStorage.setItem('agentList',JSON.stringify(list));
+  loadAgentsForAdmin();
+}
+
 function loadAgentsForAdmin(){
   const list = JSON.parse(localStorage.getItem('agentList')||'[]');
   const box = document.getElementById('agentAdminList');
@@ -178,9 +214,51 @@ function loadAgentsForAdmin(){
   list.forEach((a,i)=>{
     const div = document.createElement('div');
     div.style.padding = '4px 0';
-    div.innerText = `${i+1}. ${a.name} | QQ:${a.qq} | ${a.level}`;
+    div.style.cursor = 'pointer';
+    div.innerText = `${i+1}. ${a.name} | QQ:${a.qq} | ${a.level} [点击删除]`;
+    div.onclick = () => deleteAgent(i);
     box.appendChild(div);
   });
+}
+
+// 卡密管理
+function addCards(){
+  const type = document.getElementById('cardType').value;
+  const cards = document.getElementById('cardList').value.trim().split('\n').filter(c=>c.trim()!=='');
+  if(cards.length === 0) {
+    alert('请输入卡密');
+    return;
+  }
+  const old = JSON.parse(localStorage.getItem(`card_${type}`)||'[]');
+  const newCards = [...old, ...cards];
+  localStorage.setItem(`card_${type}`, JSON.stringify(newCards));
+  alert(`成功添加 ${cards.length} 个${type}卡密`);
+  document.getElementById('cardList').value = '';
+  loadCardCount();
+}
+
+function loadCardCount(){
+  const type = document.getElementById('cardType').value;
+  const cards = JSON.parse(localStorage.getItem(`card_${type}`)||'[]');
+  document.getElementById('cardCount').innerText = `${type}剩余卡密：${cards.length} 个`;
+}
+
+// 收款码设置
+function savePayQr(){
+  const qr = document.getElementById('payQrInput').value.trim();
+  localStorage.setItem('payQr', qr);
+  loadPayQr();
+  alert('收款码已保存');
+}
+
+function loadPayQr(){
+  const qr = localStorage.getItem('payQr') || '';
+  const preview = document.getElementById('qrPreview');
+  if(qr) {
+    preview.innerHTML = `<img src="${qr}" alt="收款码">`;
+  } else {
+    preview.innerHTML = '<p style="color:var(--light-text);font-size:12px;">未设置收款码</p>';
+  }
 }
 
 function showMsg(id,text,type){
