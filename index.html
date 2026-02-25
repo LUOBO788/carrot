@@ -500,9 +500,9 @@ function userLogin() {
 
 function logout(){localStorage.removeItem('autoLogin');location.reload();}
 
-// 一键跳QQ加群
+// 修复加群：直接唤起手机QQ
 function jumpToGroup(){
-  window.open("https://qm.qq.com/q/q8zfD0PO4b", "_blank");
+  window.open("mqqapi://card/show_pslcard?src_type=internal&version=1&uin=1003106744&card_type=group&source=qrcode", "_blank");
 }
 
 function showMsg(text,type){
