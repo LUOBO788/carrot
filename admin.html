@@ -44,7 +44,6 @@ body {
   100% { background-position: 300% 50%; }
 }
 
-/* 导航 */
 .nav {
   position: fixed;
   top: 0;
@@ -74,14 +73,12 @@ body {
   cursor: pointer;
 }
 
-/* 容器 */
 .container {
   max-width: 900px;
   margin: 90px auto 0;
   padding: 0 20px;
 }
 
-/* 登录面板 */
 .login-box {
   max-width: 400px;
   margin: 100px auto;
@@ -124,7 +121,6 @@ body {
   margin-top: 6px;
 }
 
-/* 后台模块 */
 .admin-section {
   display: none;
 }
@@ -134,7 +130,6 @@ body {
   margin: 20px 0;
 }
 
-/* 卡片 */
 .card {
   background: #151515;
   border-radius: 12px;
@@ -148,7 +143,6 @@ body {
   font-size: 16px;
 }
 
-/* 用户列表 */
 .user-table {
   width: 100%;
   border-collapse: collapse;
@@ -161,7 +155,6 @@ body {
   font-size: 14px;
 }
 
-/* 公告输入 */
 .notice-input {
   width: 100%;
   padding: 12px;
@@ -183,7 +176,6 @@ body {
   cursor: pointer;
 }
 
-/* 提示 */
 .msg {
   padding: 10px;
   border-radius: 6px;
@@ -212,7 +204,6 @@ body {
 </div>
 
 <div class="container">
-  <!-- 登录 -->
   <div class="login-box" id="loginBox">
     <h2 class="gradient-text">管理员登录</h2>
     <div id="msg" class="msg"></div>
@@ -221,11 +212,9 @@ body {
     <button class="login-btn" onclick="adminLogin()">立即登录</button>
   </div>
 
-  <!-- 后台面板 -->
   <div class="admin-section" id="adminPanel">
     <h2 class="section-title gradient-text">控制面板</h2>
 
-    <!-- 用户管理 -->
     <div class="card">
       <h3 class="gradient-text">用户列表</h3>
       <table class="user-table">
@@ -240,14 +229,26 @@ body {
       </table>
     </div>
 
-    <!-- 公告管理 -->
     <div class="card">
       <h3 class="gradient-text">首页公告管理</h3>
       <textarea class="notice-input" id="noticeText" placeholder="输入公告内容，将同步到主站"></textarea>
       <button class="save-btn" onclick="saveNotice()">保存公告</button>
     </div>
 
-    <!-- 系统信息 -->
+    <!-- APK 上传模块 已集成 -->
+    <div class="card">
+      <h3 class="gradient-text">📦 APK文件管理（主站下载）</h3>
+      <div style="margin-bottom:12px;">
+        <label for="apkFile" style="display:block;margin-bottom:6px;">选择APK文件：</label>
+        <input type="file" id="apkFile" accept=".apk" style="width:100%;padding:10px;background:#181818;border:1px solid var(--border);border-radius:8px;color:var(--text);">
+      </div>
+      <button class="save-btn" onclick="uploadApk()">上传并同步到主站</button>
+      <div id="uploadStatus" class="msg" style="margin-top:10px;"></div>
+      <div id="currentApkInfo" style="margin-top:15px;padding:12px;background:#181818;border-radius:8px;border:1px solid var(--border);">
+        当前已上传：暂无文件
+      </div>
+    </div>
+
     <div class="card">
       <h3 class="gradient-text">系统信息</h3>
       <p>当前版本：v1.2.0</p>
@@ -259,11 +260,9 @@ body {
 </div>
 
 <script>
-// 【最高管理员账号密码】
 const ADMIN_USER = "LUOBO";
 const ADMIN_PWD = "tianniWZ1030LJH";
 
-// 登录
 function adminLogin() {
   const user = document.getElementById('adminUser').value.trim();
   const pwd = document.getElementById('adminPwd').value.trim();
@@ -279,58 +278,94 @@ function adminLogin() {
   }
 }
 
-// 显示后台
 function showAdmin() {
   document.getElementById('loginBox').style.display = "none";
   document.getElementById('adminPanel').style.display = "block";
   document.getElementById('logoutBtn').style.display = "block";
   loadUserList();
   loadNotice();
+  loadApkInfo();
 }
 
-// 退出
 function adminLogout() {
   localStorage.removeItem('adminLogin');
   location.reload();
 }
 
-// 加载用户列表
 function loadUserList() {
   const userList = JSON.parse(localStorage.getItem('carrotUsers') || '[]');
   const tbody = document.getElementById('userList');
   tbody.innerHTML = "";
-
   userList.forEach(u => {
     let tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${u.username}</td>
-      <td>普通用户</td>
-      <td>未开通</td>
-    `;
+    tr.innerHTML = `<td>${u.username}</td><td>普通用户</td><td>未开通</td>`;
     tbody.appendChild(tr);
   });
 }
 
-// 加载公告
 function loadNotice() {
   const notice = localStorage.getItem('carrotNotice') || "📢 v1.2.0 版本已更新\n📢 祝各位用户使用愉快";
   document.getElementById('noticeText').value = notice;
 }
 
-// 保存公告
 function saveNotice() {
   const text = document.getElementById('noticeText').value.trim();
   localStorage.setItem('carrotNotice', text);
   alert("✅ 公告已同步到主站！");
 }
 
-// 自动登录判断
+// ↓↓↓ 上传APK ↓↓↓
+async function uploadApk() {
+  const fileInput = document.getElementById('apkFile');
+  const file = fileInput.files[0];
+  const statusEl = document.getElementById('uploadStatus');
+  const infoEl = document.getElementById('currentApkInfo');
+
+  if (!file) {
+    statusEl.innerHTML = '❌ 请先选择APK文件';
+    statusEl.className = 'msg msg-error';
+    statusEl.style.display = 'block';
+    return;
+  }
+  if (!file.name.toLowerCase().endsWith('.apk')) {
+    statusEl.innerHTML = '❌ 仅支持APK文件';
+    statusEl.className = 'msg msg-error';
+    statusEl.style.display = 'block';
+    return;
+  }
+
+  statusEl.innerHTML = '⏳ 上传中...';
+  statusEl.className = 'msg msg-success';
+  statusEl.style.display = 'block';
+
+  const reader = new FileReader();
+  reader.onload = e => {
+    const apkInfo = {
+      name: file.name,
+      size: file.size,
+      uploadTime: new Date().toLocaleString(),
+      data: e.target.result
+    };
+    localStorage.setItem('latestApk', JSON.stringify(apkInfo));
+    statusEl.innerHTML = '✅ 上传成功！已同步主站下载';
+    infoEl.innerHTML = `当前：${file.name}（${(file.size/1024/1024).toFixed(2)}MB）`;
+  };
+  reader.readAsDataURL(file);
+}
+
+function loadApkInfo() {
+  const infoEl = document.getElementById('currentApkInfo');
+  const apk = JSON.parse(localStorage.getItem('latestApk') || 'null');
+  if (apk) {
+    infoEl.innerHTML = `当前：${apk.name}（${(apk.size/1024/1024).toFixed(2)}MB）`;
+  }
+}
+
 window.onload = function() {
   if(localStorage.getItem('adminLogin') === 'true') {
     showAdmin();
   }
 }
 </script>
-
 </body>
 </html>
