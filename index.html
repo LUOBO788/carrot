@@ -271,8 +271,8 @@ input{
 
 <div class="user-center">
   <div class="user-tabs">
-    <div class="user-tab active" onclick="switchTab('login')">登录</div>
-    <div class="user-tab" onclick="switchTab('reg')">注册</div>
+    <div class="user-tab active" onclick="showLogin()">登录</div>
+    <div class="user-tab" onclick="showReg()">注册</div>
   </div>
 
   <div class="user-form active" id="login-form">
@@ -295,7 +295,8 @@ input{
     </div>
 
     <div class="user-btns">
-      <button class="btn" onclick="logout()">退出登录</button>
+      <button class="btn" onclick="openBuyPanel()">开通会员</button>
+      <button class="btn btn-exit" onclick="logout()">退出登录</button>
     </div>
 
     <div class="price-cards">
@@ -358,46 +359,54 @@ function createParticles(){
   }
 }
 
-function switchTab(t){
+function showLogin(){
   document.querySelectorAll('.user-tab').forEach(e=>e.classList.remove('active'));
-  document.querySelectorAll('.user-form').forEach(e=>e.classList.remove('active'));
-  if(t === 'login'){
-    document.getElementById('login-form').classList.add('active');
-    document.querySelectorAll('.user-tab')[0].classList.add('active');
-  }else{
-    document.getElementById('reg-form').classList.add('active');
-    document.querySelectorAll('.user-tab')[1].classList.add('active');
-  }
+  document.querySelectorAll('.user-tab')[0].classList.add('active');
+  document.getElementById('login-form').classList.add('active');
+  document.getElementById('reg-form').classList.remove('active');
+}
+
+function showReg(){
+  document.querySelectorAll('.user-tab').forEach(e=>e.classList.remove('active'));
+  document.querySelectorAll('.user-tab')[1].classList.add('active');
+  document.getElementById('reg-form').classList.add('active');
+  document.getElementById('login-form').classList.remove('active');
 }
 
 function userRegister(){
   const u = document.getElementById('reg-user').value.trim();
   const p = document.getElementById('reg-pwd').value.trim();
   const p2 = document.getElementById('reg-pwd2').value.trim();
+
   if(!u || !p || p !== p2){
     alert('请正确填写信息');
     return;
   }
+
   let users = JSON.parse(localStorage.getItem('carrotUsers') || '[]');
   if(users.some(item => item.user === u)){
     alert('用户名已存在');
     return;
   }
+
   users.push({ user: u, pwd: p });
   localStorage.setItem('carrotUsers', JSON.stringify(users));
   alert('注册成功，请登录');
-  switchTab('login');
+  showLogin();
 }
 
 function userLogin(){
   const u = document.getElementById('login-user').value.trim();
   const p = document.getElementById('login-pwd').value.trim();
+
   let users = JSON.parse(localStorage.getItem('carrotUsers') || '[]');
-  let find = users.find(item => item.user === u && item.pwd === p);
-  if(!find){
+  let findUser = users.find(item => item.user === u && item.pwd === p);
+
+  if(!findUser){
     alert('账号或密码错误');
     return;
   }
+
   loginUser = u;
   localStorage.setItem('loginUser', u);
   showUserPage();
@@ -414,6 +423,10 @@ function showUserPage(){
 function logout(){
   localStorage.removeItem('loginUser');
   location.reload();
+}
+
+function openBuyPanel(){
+  alert('请选择套餐');
 }
 
 function openBuy(type,price){
