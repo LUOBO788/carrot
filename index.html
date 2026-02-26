@@ -1023,8 +1023,9 @@ function loadAgents(){
   list.forEach(agent => {
     const item = document.createElement('div');
     item.className = 'agent-item';
+    // 点击代理直接跳转到QQ加好友
     item.onclick = () => {
-      alert(`官方代理QQ：${agent.qq}\n请复制QQ号手动添加`);
+      window.open(`mqqapi://card/show_pslcard?src_type=internal&version=1&uin=${agent.qq}&card_type=person&source=qrcode`, "_blank");
     };
     item.innerHTML = `
       <img class="agent-avatar" src="https://q1.qlogo.cn/g?b=qq&nk=${agent.qq}&s=640" alt="头像">
@@ -1152,14 +1153,12 @@ document.addEventListener("DOMContentLoaded",function(){
   ];
   localStorage.setItem('agentList', JSON.stringify(agentData));
 
-  // 修复加载卡死：强制1.6秒后隐藏启动页
-  setTimeout(()=>{
-    const splash = document.getElementById('splash');
-    if (splash) {
-      splash.classList.add('hidden');
-      setTimeout(() => splash.style.display = 'none', 800);
-    }
-  }, 1600);
+  // ========== 彻底修复加载页卡死：直接隐藏，无卡死风险 ==========
+  const splash = document.getElementById('splash');
+  if (splash) {
+    splash.classList.add('hidden');
+    setTimeout(() => splash.style.display = 'none', 300);
+  }
 
   loadAgents();
   const notice = localStorage.getItem('siteNotice');
